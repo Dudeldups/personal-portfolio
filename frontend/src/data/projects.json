@@ -1,0 +1,30 @@
+[
+  {
+    "title": "Scoot",
+    "techs": ["React", "TypeScript", "Styled Components"],
+    "image": "scoot.png",
+    "demoLink": "https://github.com",
+    "githubLink": "https://github.com"
+  },
+  {
+    "title": "Coffeeroasters",
+    "techs": ["React", "TypeScript", "Tailwind CSS"],
+    "image": "coffeeroasters.png",
+    "demoLink": "https://github.com",
+    "githubLink": "https://github.com"
+  },
+  {
+    "title": "Maker",
+    "techs": ["HTML", "TypeScript", "Tailwind CSS"],
+    "image": "maker.png",
+    "demoLink": "https://github.com",
+    "githubLink": "https://github.com"
+  },
+  {
+    "title": "Portfolio",
+    "techs": ["React", "TypeScript", "Tailwind CSS"],
+    "image": "portfolio.png",
+    "demoLink": "https://github.com",
+    "githubLink": "https://github.com"
+  }
+]
