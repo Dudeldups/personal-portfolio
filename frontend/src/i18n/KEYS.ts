@@ -1,0 +1,13 @@
+export const KEYS = {
+  GENERAL: {
+    WELCOME: "GENERAL.WELCOME",
+    SCROLL_TO_TOP: "GENERAL.SCROLL_TO_TOP",
+  },
+
+  NAV: {
+    HOME: "NAV.HOME",
+    ABOUT: "NAV.ABOUT",
+    PROJECTS: "NAV.PROJECTS",
+    CONTACT: "NAV.CONTACT",
+  },
+};
