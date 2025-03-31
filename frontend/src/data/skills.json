@@ -1,0 +1,46 @@
+[
+  {
+    "name": "HTML",
+    "isHidden": false
+  },
+  {
+    "name": "CSS",
+    "isHidden": false
+  },
+  {
+    "name": "TypeScript",
+    "isHidden": false
+  },
+  {
+    "name": "React",
+    "isHidden": false
+  },
+  {
+    "name": "Node.js",
+    "isHidden": false
+  },
+  {
+    "name": "MongoDB",
+    "isHidden": false
+  },
+  {
+    "name": "PostgreSQL",
+    "isHidden": false
+  },
+  {
+    "name": "Sass",
+    "isHidden": true
+  },
+  {
+    "name": "Less",
+    "isHidden": true
+  },
+  {
+    "name": "Tailwind CSS",
+    "isHidden": true
+  },
+  {
+    "name": "Styled Components",
+    "isHidden": true
+  }
+]
