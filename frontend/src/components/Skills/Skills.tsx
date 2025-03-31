@@ -6,7 +6,7 @@ const Skills = () => {
   const { t } = useTranslation();
 
   return (
-    <section>
+    <section id="skills" className="px-page w-full">
       <div>
         <h2>{t(KEYS.SKILLS.TITLE)}</h2>
         <p>{t(KEYS.SKILLS.DESC)}</p>

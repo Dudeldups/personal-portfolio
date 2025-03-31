@@ -3,9 +3,11 @@ import Navbar from "./Navbar";
 
 const Header = () => {
   return (
-    <header className="w-full">
-      <a href="/" className="font-bebas text-2xl font-bold">
-        Arne Jacob
+    <header className="px-page flex w-full items-center py-5">
+      <a href="/" className="mr-auto font-oswald text-2xl">
+        <span className="text-primary">A</span>rne{" "}
+        <span className="text-accent">J</span>
+        acob
       </a>
       <Navbar />
 

@@ -9,16 +9,17 @@ const LanguageSwitcher = () => {
     i18n.changeLanguage(event.target.value);
 
   return (
-    <div>
+    <div className="ml-6">
       <select
         onChange={changeLanguage}
         name="language"
         id="language-select"
         value={i18n.language}
         aria-label={t(KEYS.GENERAL.SWITCHER_LABEL)}
+        className="cursor-pointer"
       >
         {Object.entries(availableLangeuages).map(([key, label]) => (
-          <option key={key} value={key}>
+          <option key={key} value={key} className="bg-white text-darkest">
             {label}
           </option>
         ))}

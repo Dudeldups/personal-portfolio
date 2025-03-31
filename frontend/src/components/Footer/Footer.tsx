@@ -6,7 +6,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full">
+    <footer className="px-page w-full">
       <div>
         <p>
           &copy; {currentYear} Arne Jacob - {t(KEYS.FOOTER.DISCLAIMER)}
