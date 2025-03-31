@@ -2,17 +2,17 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-import { en } from "./locales/en";
 import { de } from "./locales/de";
+import { en } from "./locales/en";
 
 const resources = {
-  en,
   de,
+  en,
 };
 
 export const availableLangeuages = {
-  en: "English",
   de: "Deutsch",
+  en: "English",
 };
 
 i18n
@@ -23,8 +23,8 @@ i18n
 
     resources,
     detection: {
-      order: ["localStorage", "cookie", "navigator", "htmlTag"],
-      caches: ["localStorage", "cookie"],
+      order: ["localStorage", "cookie", "navigator"],
+      caches: ["localStorage"],
     },
     fallbackLng: "en",
     interpolation: {
