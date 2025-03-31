@@ -11,16 +11,20 @@ export const en = {
     [KEYS.NAV.PROJECTS]: "Projects",
     [KEYS.NAV.CONTACT]: "Contact",
 
-    [KEYS.INTRO.TITLE]: "Hi, I'm Arne",
+    [KEYS.INTRO.TITLE]: "Hi, I'm <1>Arne</1>!",
     [KEYS.INTRO.LOCATION]: "Dortmund / Germany",
     [KEYS.INTRO.JOB]: "Full Stack Developer",
     [KEYS.INTRO.DESC]:
-      "I build cool stuff for the web. I love to learn new things and share my knowledge with others.",
+      "I build cool stuff for the web and love to learn new things and share my knowledge with others.",
     [KEYS.INTRO.BUTTON]: "Contact me",
 
     [KEYS.ABOUT.TITLE]: "About me",
     [KEYS.ABOUT.DESC]:
       "Hey, my name is Arne Jacob, and I'm a Full-Stack Web Developer. JavaScript games got me into coding, and what started as a fun challenge kicked off my journey into web development. I focus on creating user-friendly interfaces and bringing seamless functionality to everything I put my hands on.",
+    [KEYS.ABOUT.DESC_2]:
+      "I believe in writing clean, maintainable code and building applications that not only work well but also feel intuitive to use.",
+    [KEYS.ABOUT.DESC_3]:
+      "In my free time, I love working on my own projects or exploring nature with my dog Elmo - especially while hiking.",
 
     [KEYS.SKILLS.TITLE]: "Tech Stack",
     [KEYS.SKILLS.DESC]:

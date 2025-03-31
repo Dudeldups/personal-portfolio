@@ -23,6 +23,8 @@ export const KEYS = {
   ABOUT: {
     TITLE: "ABOUT.TITLE",
     DESC: "ABOUT.DESC",
+    DESC_2: "ABOUT.DESC_2",
+    DESC_3: "ABOUT.DESC_3",
     BUTTON: "ABOUT.BUTTON",
   },
 
