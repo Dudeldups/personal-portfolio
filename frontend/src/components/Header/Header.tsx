@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 
 const Header = () => {
   return (
-    <header className="px-page flex w-full items-center py-5">
+    <header className="flex w-full max-w-page items-center px-page py-5">
       <a href="/" className="mr-auto font-oswald text-2xl">
         <span className="text-primary">A</span>rne{" "}
         <span className="text-accent">J</span>

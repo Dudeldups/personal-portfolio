@@ -6,13 +6,12 @@ const Contact = () => {
   const { t } = useTranslation();
 
   return (
-    <section id="contact" className="w-full">
+    <section id="contact" className="section mx-auto w-full max-w-page px-page">
       <div>
-        <h2>{t(KEYS.CONTACT.TITLE)}</h2>
-
-        <div>
+        <hgroup className="text-center">
+          <h2>{t(KEYS.CONTACT.TITLE)}</h2>
           <p>{t(KEYS.CONTACT.DESC)}</p>
-        </div>
+        </hgroup>
 
         <ButtonContainer showText={true} />
       </div>

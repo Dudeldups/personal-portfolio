@@ -9,7 +9,13 @@
   --color-accent: #ff3a00;
   --color-darkest: #181818;
   --color-dark: #282828;
+  --color-dark-light: #383838;
   --color-light: #d9d9d9;
+
+  --breakpoint-xs: 30rem;
+  --breakpoint-lg: 62.5rem;
+
+  --spacing-page: 68.75rem;
 }
 
 @layer base {
@@ -18,18 +24,22 @@
   }
 
   body {
-    @apply bg-darkest font-lato text-base text-white;
+    @apply bg-darkest font-lato text-base text-light;
   }
 
   :where(h1, h2, h3, h4, h5, h6) {
-    @apply font-oswald font-semibold;
+    @apply font-oswald font-semibold text-white;
   }
 
   h1 {
-    @apply text-4xl;
+    @apply text-5xl sm:text-6xl md:text-5xl lg:text-7xl;
+  }
 
-    @variant md {
-      @apply text-5xl;
+  h2 {
+    @apply text-4xl text-primary md:text-5xl;
+
+    & + p {
+      @apply mt-6 md:mt-8;
     }
   }
 }
@@ -38,11 +48,23 @@
   .px-page {
     @apply px-4 sm:px-6 lg:px-8;
   }
+
+  .section {
+    @apply relative mt-16 sm:mt-18 md:mt-20;
+  }
 }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center rounded-md border border-transparent bg-slate-800 px-4 py-2 text-sm font-medium text-gray-100 shadow-sm transition duration-150 ease-in-out;
+    @apply relative inline-flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-1.5 text-sm font-medium text-white shadow-lg shadow-gray-600 transition duration-150 ease-in-out;
+  }
+
+  .portrait-img {
+    max-width: min(100%, 26rem);
+
+    @variant md {
+      max-width: min(100%, clamp(26rem, 6.1379rem + 41.3793vw, 32rem));
+    }
   }
 }
 

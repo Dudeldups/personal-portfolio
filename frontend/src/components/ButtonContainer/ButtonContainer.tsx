@@ -6,24 +6,33 @@ import { FaGithub } from "react-icons/fa6";
 
 type ButtonContainerProps = {
   showText: boolean;
+  className?: string;
 };
 
-const ButtonContainer = ({ showText }: ButtonContainerProps) => {
+const ButtonContainer = ({ showText, className }: ButtonContainerProps) => {
   const { t } = useTranslation();
 
   return (
-    <div className="">
-      <a href="mailto:hi@dudeldups.dev" className="btn">
-        <MdOutlineEmail />
-        {showText && <span>{t(KEYS.CONTACT.BUTTON)}</span>}
+    <div className={className}>
+      <a href="mailto:hi@dudeldups.dev" className="btn flex items-center gap-2">
+        <MdOutlineEmail className="text-2xl text-darkest" />
+        {showText && (
+          <span className="text-darkest">{t(KEYS.CONTACT.BUTTON)}</span>
+        )}
       </a>
-      <a href="https://linkedin.com/in/arne-jacob/" className="btn">
-        <FaLinkedin />
-        {showText && <span>LinkedIn</span>}
+      <a
+        href="https://linkedin.com/in/arne-jacob/"
+        className="btn flex items-center gap-2"
+      >
+        <FaLinkedin className="text-2xl text-darkest" />
+        {showText && <span className="text-darkest">LinkedIn</span>}
       </a>
-      <a href="https://github.com/Dudeldups" className="btn">
-        <FaGithub />
-        {showText && <span>GitHub</span>}
+      <a
+        href="https://github.com/Dudeldups"
+        className="btn flex items-center gap-2"
+      >
+        <FaGithub className="text-2xl text-darkest" />
+        {showText && <span className="text-darkest">GitHub</span>}
       </a>
     </div>
   );

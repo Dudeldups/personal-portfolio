@@ -6,12 +6,17 @@ const Projects = () => {
   const { t } = useTranslation();
 
   return (
-    <section id="projects" className="px-page w-full">
+    <section
+      id="projects"
+      className="section mx-auto w-full max-w-page px-page"
+    >
       <div>
-        <h2>{t(KEYS.PROJECTS.TITLE)}</h2>
-        <p>{t(KEYS.PROJECTS.DESC)}</p>
+        <hgroup className="text-center">
+          <h2>{t(KEYS.PROJECTS.TITLE)}</h2>
+          <p>{t(KEYS.PROJECTS.DESC)}</p>
+        </hgroup>
 
-        <ul>
+        <ul className="mt-10 grid gap-8">
           {projects.map((project) => {
             const uppercaseTitle =
               project.title.toUpperCase() as keyof typeof KEYS.PROJECTS;
@@ -20,13 +25,18 @@ const Projects = () => {
 
             return (
               <li key={project.title}>
-                <h3>{t(titleString)}</h3>
-                <p>{t(descString)}</p>
+                <hgroup className="text-center">
+                  <h3 className="mb-3 text-2xl">{t(titleString)}</h3>
+                  <p>{t(descString)}</p>
+                </hgroup>
 
-                <img
-                  src={`/assets/images/project-previews/${project.image}`}
-                  alt={`Preview of the ${project.title} website`}
-                />
+                <picture className="mt-6 block aspect-square bg-pink-400 p-1">
+                  <img
+                    src={`/assets/images/project-previews/${project.image}`}
+                    alt={`Preview of the ${project.title} website`}
+                    className=""
+                  />
+                </picture>
 
                 <div>
                   <a href={project.demoLink} className="btn">

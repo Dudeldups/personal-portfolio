@@ -9,7 +9,7 @@ import "./i18n/i18n";
 
 function App() {
   return (
-    <div className="flex min-h-screen flex-col items-center">
+    <div className="flex min-h-screen flex-col items-center justify-center">
       <Meta />
 
       <Header />
