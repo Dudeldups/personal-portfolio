@@ -9,7 +9,7 @@ const Intro = () => {
   return (
     <section id="about" className="px-page pt-14 pb-10 md:pt-20 md:pb-14">
       <div className="mx-auto w-full max-w-page text-center md:text-left">
-        <div className="grid w-full md:grid-cols-12 md:grid-rows-1">
+        <div className="grid w-full md:grid-cols-1 md:grid-rows-1">
           <div className="md:col-span-full md:row-span-full md:self-end md:mix-blend-difference">
             <hgroup>
               <h1>
@@ -40,7 +40,7 @@ const Intro = () => {
           <img
             src="/assets/images/Foto.webp"
             alt="Portrait of Arne"
-            className="portrait-img place-self-center rounded-full outline-4 outline-offset-8 outline-dark-light max-md:mt-14 md:col-start-4 md:col-end-[-1] md:row-span-full md:place-self-end"
+            className="portrait-img place-self-center rounded-full outline-4 outline-offset-8 outline-dark-light max-md:mt-14 md:col-span-full md:row-span-full md:place-self-end"
           />
         </div>
 
