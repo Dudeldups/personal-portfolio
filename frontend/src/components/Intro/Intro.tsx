@@ -7,7 +7,7 @@ const Intro = () => {
   const { t } = useTranslation();
 
   return (
-    <section id="about" className="px-page pt-14 md:pt-20">
+    <section id="about" className="px-page pt-14 pb-10 md:pt-20 md:pb-14">
       <div className="mx-auto w-full max-w-page text-center md:text-left">
         <div className="grid w-full md:grid-cols-12 md:grid-rows-1">
           <div className="md:col-span-full md:row-span-full md:self-end md:mix-blend-difference">

@@ -7,8 +7,8 @@ const Skills = () => {
   const { t } = useTranslation();
 
   return (
-    <section id="skills" className="section mx-auto w-full max-w-page px-page">
-      <div className="text-center">
+    <section id="skills" className="section bg-dark px-page">
+      <div className="mx-auto w-full max-w-page text-center">
         <hgroup>
           <h2>{t(KEYS.SKILLS.TITLE)}</h2>
           <p className="mx-auto max-w-96">{t(KEYS.SKILLS.DESC)}</p>

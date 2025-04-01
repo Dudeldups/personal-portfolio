@@ -49,7 +49,7 @@
   }
 
   .section {
-    @apply mt-18 sm:mt-20 md:mt-24;
+    @apply py-10 md:py-14;
   }
 }
 
