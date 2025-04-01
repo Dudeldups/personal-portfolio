@@ -13,7 +13,6 @@
   --color-light: #d9d9d9;
 
   --breakpoint-xs: 30rem;
-  --breakpoint-lg: 62.5rem;
 
   --spacing-page: 68.75rem;
 }
@@ -32,7 +31,7 @@
   }
 
   h1 {
-    @apply text-5xl sm:text-6xl md:text-5xl lg:text-7xl;
+    @apply text-5xl sm:text-6xl md:text-[clamp(3rem,_-1.9655rem_+_10.3448vw,_4.5rem)] lg:text-7xl;
   }
 
   h2 {
@@ -46,11 +45,11 @@
 
 @layer utilities {
   .px-page {
-    @apply px-4 sm:px-6 lg:px-8;
+    @apply px-4 sm:px-6 lg:px-10;
   }
 
   .section {
-    @apply relative mt-16 sm:mt-18 md:mt-20;
+    @apply mt-18 sm:mt-20 md:mt-24;
   }
 }
 
