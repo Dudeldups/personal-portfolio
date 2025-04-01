@@ -5,34 +5,53 @@ import { FaLinkedin } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa6";
 
 type ButtonContainerProps = {
-  showText: boolean;
+  hideText: boolean;
+  hasRoundedButtons?: boolean;
   className?: string;
 };
 
-const ButtonContainer = ({ showText, className }: ButtonContainerProps) => {
+const ButtonContainer = ({
+  hideText,
+  className,
+  hasRoundedButtons,
+}: ButtonContainerProps) => {
   const { t } = useTranslation();
 
   return (
+    // TODO: Fix links
+
     <div className={className}>
-      <a href="mailto:hi@dudeldups.dev" className="btn flex items-center gap-2">
+      <a
+        href="mailto:hi@dudeldups.dev"
+        className={`btn flex items-center gap-2 ${hasRoundedButtons ? "aspect-square rounded-full" : ""}`}
+      >
         <MdOutlineEmail className="text-2xl text-darkest" />
-        {showText && (
-          <span className="text-darkest">{t(KEYS.CONTACT.BUTTON)}</span>
-        )}
+
+        <span className={`text-darkest ${hideText ? "hidden" : ""}`}>
+          {t(KEYS.CONTACT.BUTTON)}
+        </span>
       </a>
       <a
+        target="_blank"
+        rel="noopener noreferrer"
         href="https://linkedin.com/in/arne-jacob/"
-        className="btn flex items-center gap-2"
+        className={`btn flex items-center gap-2 ${hasRoundedButtons ? "aspect-square rounded-full" : ""}`}
       >
         <FaLinkedin className="text-2xl text-darkest" />
-        {showText && <span className="text-darkest">LinkedIn</span>}
+        <span className={`text-darkest ${hideText ? "hidden" : ""}`}>
+          LinkedIn
+        </span>
       </a>
       <a
+        target="_blank"
+        rel="noopener noreferrer"
         href="https://github.com/Dudeldups"
-        className="btn flex items-center gap-2"
+        className={`btn flex items-center gap-2 ${hasRoundedButtons ? "aspect-square rounded-full" : ""}`}
       >
         <FaGithub className="text-2xl text-darkest" />
-        {showText && <span className="text-darkest">GitHub</span>}
+        <span className={`text-darkest ${hideText ? "hidden" : ""}`}>
+          GitHub
+        </span>
       </a>
     </div>
   );
