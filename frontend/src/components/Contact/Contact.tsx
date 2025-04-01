@@ -6,17 +6,17 @@ const Contact = () => {
   const { t } = useTranslation();
 
   return (
-    <section
-      id="contact"
-      className="section mx-auto w-full max-w-page px-page pb-18 md:pb-24"
-    >
-      <div>
-        <hgroup className="text-center">
+    <section id="contact" className="section w-full px-page">
+      <div className="mx-auto w-full max-w-page pb-10">
+        <hgroup className="mx-auto max-w-[25rem] text-center">
           <h2>{t(KEYS.CONTACT.TITLE)}</h2>
           <p>{t(KEYS.CONTACT.DESC)}</p>
         </hgroup>
 
-        <ButtonContainer hideText={false} />
+        <ButtonContainer
+          hideText={false}
+          className="mx-auto mt-10 flex max-w-48 flex-col gap-6"
+        />
       </div>
     </section>
   );
