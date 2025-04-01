@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { KEYS } from "../../i18n/KEYS";
 import projects from "../../data/projects.json";
+import TechIcon from "../Skills/TechIcon";
 
 const Projects = () => {
   const { t } = useTranslation();
@@ -8,7 +9,7 @@ const Projects = () => {
   return (
     <section id="projects" className="section px-page">
       <div className="mx-auto w-full max-w-page">
-        <hgroup className="text-center">
+        <hgroup className="mx-auto max-w-[25rem] text-center">
           <h2>{t(KEYS.PROJECTS.TITLE)}</h2>
           <p>{t(KEYS.PROJECTS.DESC)}</p>
         </hgroup>
@@ -21,13 +22,30 @@ const Projects = () => {
             const descString = "PROJECTS." + uppercaseTitle + ".DESC";
 
             return (
-              <li key={project.title}>
-                <hgroup className="text-center">
-                  <h3 className="mb-3 text-2xl underline decoration-accent underline-offset-4">
-                    {t(titleString)}
-                  </h3>
-                  <p>{t(descString)}</p>
-                </hgroup>
+              <li
+                key={project.title}
+                className="border-t-accent pt-8 not-first:border-t-2"
+              >
+                <div className="flex flex-col items-center gap-7 lg:flex-row lg:gap-20">
+                  <hgroup className="max-w-2xs text-center lg:text-left">
+                    <h3 className="mb-5 text-2xl underline decoration-white underline-offset-4">
+                      {t(titleString)}
+                    </h3>
+                    <p>{t(descString)}</p>
+                  </hgroup>
+
+                  <div className="flex justify-center gap-8">
+                    {project.techs.map((tech) => (
+                      <div
+                        key={project.title + tech}
+                        className="flex flex-col items-center gap-2 text-sm font-bold text-white"
+                      >
+                        <TechIcon tech={tech} className="text-2xl" />
+                        <span>{tech}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
                 <picture className="mt-8 block">
                   <img
