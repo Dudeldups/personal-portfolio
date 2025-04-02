@@ -24,7 +24,7 @@ const Projects = () => {
             return (
               <li
                 key={project.title}
-                className="border-t-accent pt-8 not-first:border-t-2"
+                className="border-t-dark-light pt-8 not-first:border-t-2"
               >
                 <div className="flex flex-col items-center gap-7 lg:flex-row lg:gap-20">
                   <hgroup className="max-w-2xs text-center lg:text-left">
