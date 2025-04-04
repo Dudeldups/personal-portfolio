@@ -10,7 +10,7 @@ const resources = {
   en,
 };
 
-export const availableLangeuages = {
+export const availableLanguages = {
   de: "Deutsch",
   en: "English",
 };
