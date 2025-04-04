@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { availableLangeuages } from "../../i18n/i18n";
+import { availableLanguages } from "../../i18n/i18n";
 import { KEYS } from "../../i18n/KEYS";
 
 const LanguageSwitcher = () => {
@@ -18,7 +18,7 @@ const LanguageSwitcher = () => {
         aria-label={t(KEYS.GENERAL.SWITCHER_LABEL)}
         className="cursor-pointer"
       >
-        {Object.entries(availableLangeuages).map(([key, label]) => (
+        {Object.entries(availableLanguages).map(([key, label]) => (
           <option key={key} value={key} className="bg-white text-darkest">
             {label}
           </option>

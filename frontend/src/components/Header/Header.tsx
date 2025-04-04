@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import LanguageSwitcher from "./LanguageSwitcher";
 import Navbar from "./Navbar";
+import MobileNavbar from "./MobileNavbar";
 
 const Header = () => {
   const headerRef = useRef<HTMLDivElement>(null);
@@ -42,9 +42,9 @@ const Header = () => {
           <span className="text-accent">J</span>
           acob
         </a>
-        <Navbar />
 
-        <LanguageSwitcher />
+        <Navbar />
+        <MobileNavbar />
       </div>
     </header>
   );
