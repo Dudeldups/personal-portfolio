@@ -7,7 +7,7 @@ const Contact = () => {
 
   return (
     <section id="contact" className="section w-full px-page">
-      <div className="mx-auto w-full max-w-page pb-10">
+      <div className="mx-auto flex w-full max-w-page flex-col gap-12 pb-10">
         <hgroup className="mx-auto max-w-[25rem] text-center">
           <h2>{t(KEYS.CONTACT.TITLE)}</h2>
           <p>{t(KEYS.CONTACT.DESC)}</p>
@@ -15,7 +15,7 @@ const Contact = () => {
 
         <ButtonContainer
           hideText={false}
-          className="mx-auto mt-10 flex max-w-48 flex-col gap-6"
+          className="mx-auto flex min-w-40 flex-col gap-6"
         />
       </div>
     </section>
