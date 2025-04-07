@@ -12,15 +12,14 @@ export const de = {
     [KEYS.NAV.CONTACT]: "Kontakt",
 
     [KEYS.INTRO.TITLE]: "Hi, ich bin <1>Arne</1>!",
-    [KEYS.INTRO.LOCATION]: "Dortmund",
     [KEYS.INTRO.JOB]: "Full Stack Entwickler",
     [KEYS.INTRO.DESC]:
-      "Ich baue coole Sachen für das Web und liebe es, neue Dinge zu lernen und mein Wissen mit anderen zu teilen.",
+      "Ich baue coole Sachen für das Web.<1/>Barrierefrei, performant und benutzerfreundlich.",
     [KEYS.INTRO.BUTTON]: "Schreib mir",
 
     [KEYS.ABOUT.TITLE]: "Über mich",
     [KEYS.ABOUT.DESC]:
-      "Hey, ich bin Arne Jacob und ich bin Full-Stack Web-Entwickler. JavaScript-Spiele haben mich zum Programmieren gebracht, und was als spaßige Herausforderung begann, hat meine Leidenschaft für die Webentwicklung entfacht. Ich konzentriere mich darauf, benutzerfreundliche Oberflächen zu schaffen und nahtlose Funktionalität in alles zu bringen, woran ich arbeite.",
+      "Hey, ich bin Arne Jacob und ich bin Full Stack Entwickler. JavaScript-Spiele haben mich zum Programmieren gebracht, und was als spaßige Herausforderung begann, hat meine Leidenschaft für die Webentwicklung entfacht. Ich konzentriere mich darauf, benutzerfreundliche Oberflächen zu schaffen und nahtlose Funktionalität in alles zu bringen, woran ich arbeite.",
     [KEYS.ABOUT.DESC_2]:
       "Ich lege großen Wert auf sauberen, wartbaren Code und entwickle Anwendungen, die nicht nur funktionieren, sondern sich auch intuitiv anfühlen.",
     [KEYS.ABOUT.DESC_3]:

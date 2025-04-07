@@ -14,7 +14,6 @@ export const KEYS = {
 
   INTRO: {
     TITLE: "INTRO.TITLE",
-    LOCATION: "INTRO.LOCATION",
     JOB: "INTRO.JOB",
     DESC: "INTRO.DESC",
     BUTTON: "INTRO.BUTTON",
