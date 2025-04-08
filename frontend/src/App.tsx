@@ -9,19 +9,21 @@ import "./i18n/i18n";
 
 function App() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <div className="mx-auto flex min-h-screen max-w-page flex-col items-start justify-center lg:flex-row">
       <Meta />
 
       <Header />
 
-      <main className="w-full flex-1">
-        <Intro />
-        <Skills />
-        <Projects />
-        <Contact />
-      </main>
+      <div className="">
+        <main className="">
+          <Intro />
+          <Skills />
+          <Projects />
+          <Contact />
+        </main>
 
-      <Footer />
+        <Footer />
+      </div>
     </div>
   );
 }

@@ -1,50 +1,41 @@
-import { useEffect, useRef } from "react";
+import { Trans, useTranslation } from "react-i18next";
+import ButtonContainer from "../ButtonContainer/ButtonContainer";
 import Navbar from "./Navbar";
-import MobileNavbar from "./MobileNavbar";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { KEYS } from "../../i18n/KEYS";
 
 const Header = () => {
-  const headerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (headerRef.current) {
-        if (window.scrollY > 0) {
-          headerRef.current.classList.add(
-            "bg-dark-light",
-            "shadow-lg",
-            "shadow-darkest",
-          );
-          headerRef.current.classList.remove("bg-darkest");
-        } else {
-          headerRef.current.classList.remove(
-            "bg-dark-light",
-            "shadow-lg",
-            "shadow-darkest",
-          );
-          headerRef.current.classList.add("bg-darkest");
-        }
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const { t } = useTranslation();
 
   return (
-    <header
-      ref={headerRef}
-      className="sticky top-0 z-100 w-full bg-darkest px-page backdrop-blur-sm transition-colors duration-300"
-    >
-      <div className="mx-auto flex max-w-page items-center py-5">
-        <a href="#" className="mr-auto font-oswald text-2xl sm:text-3xl">
-          <span className="text-primary">A</span>rne{" "}
-          <span className="text-accent">J</span>
-          acob
-        </a>
+    <header className="top-0 w-full px-page lg:sticky">
+      <div className="flex w-full flex-col items-center bg-slate-800 py-5 lg:min-h-screen">
+        <LanguageSwitcher />
+
+        <div className="mt-8 mb-12 text-center lg:text-left">
+          <h1>
+            <Trans i18nKey={KEYS.INTRO.TITLE}>
+              0 <span className="underline decoration-primary">1</span>2
+            </Trans>
+          </h1>
+
+          <h2 className="mt-8 text-2xl font-bold text-white sm:text-3xl md:mt-7 lg:text-4xl">
+            {t(KEYS.INTRO.JOB)}
+          </h2>
+          <p className="mt-6 max-w-md text-lg max-md:mx-auto sm:text-xl md:mt-8">
+            <Trans i18nKey={KEYS.INTRO.DESC}>
+              0 <br />2
+            </Trans>
+          </p>
+        </div>
 
         <Navbar />
-        <MobileNavbar />
+
+        <ButtonContainer
+          hideText={true}
+          hasRoundedButtons={true}
+          className="mt-auto flex items-center justify-center gap-6 md:justify-start"
+        />
       </div>
     </header>
   );
