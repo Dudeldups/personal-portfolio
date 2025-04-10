@@ -8,7 +8,7 @@ const Contact = () => {
   return (
     <section id="contact" className="section w-full px-page">
       <div className="mx-auto flex w-full max-w-page flex-col gap-12 pb-10">
-        <hgroup className="mx-auto max-w-[25rem] text-center">
+        <hgroup className="mx-auto text-center max-lg:max-w-[25rem] lg:text-left">
           <h2>{t(KEYS.CONTACT.TITLE)}</h2>
           <p>{t(KEYS.CONTACT.DESC)}</p>
         </hgroup>
