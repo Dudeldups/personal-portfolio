@@ -20,40 +20,46 @@ const ButtonContainer = ({
   return (
     // TODO: Fix links
 
-    <div className={className}>
-      <a
-        href="mailto:hi@dudeldups.dev"
-        className={`btn flex items-center gap-2 ${hasRoundedButtons ? "aspect-square rounded-full" : ""}`}
-      >
-        <MdOutlineEmail className="text-2xl text-darkest" />
+    <ul className={className}>
+      <li>
+        <a
+          href="mailto:hi@dudeldups.dev"
+          className={`btn flex items-center gap-2 ${hasRoundedButtons ? "aspect-square rounded-full" : ""}`}
+        >
+          <MdOutlineEmail className="text-2xl text-darkest" />
 
-        <span className={`text-darkest ${hideText ? "hidden" : ""}`}>
-          {t(KEYS.CONTACT.BUTTON)}
-        </span>
-      </a>
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://linkedin.com/in/arne-jacob/"
-        className={`btn flex items-center gap-2 ${hasRoundedButtons ? "aspect-square rounded-full" : ""}`}
-      >
-        <FaLinkedin className="text-2xl text-darkest" />
-        <span className={`text-darkest ${hideText ? "hidden" : ""}`}>
-          LinkedIn
-        </span>
-      </a>
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://github.com/Dudeldups"
-        className={`btn flex items-center gap-2 ${hasRoundedButtons ? "aspect-square rounded-full" : ""}`}
-      >
-        <FaGithub className="text-2xl text-darkest" />
-        <span className={`text-darkest ${hideText ? "hidden" : ""}`}>
-          GitHub
-        </span>
-      </a>
-    </div>
+          <span className={`text-darkest ${hideText ? "hidden" : ""}`}>
+            {t(KEYS.CONTACT.BUTTON)}
+          </span>
+        </a>
+      </li>
+      <li>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://linkedin.com/in/arne-jacob/"
+          className={`btn flex items-center gap-2 ${hasRoundedButtons ? "aspect-square rounded-full" : ""}`}
+        >
+          <FaLinkedin className="text-2xl text-darkest" />
+          <span className={`text-darkest ${hideText ? "hidden" : ""}`}>
+            LinkedIn
+          </span>
+        </a>
+      </li>
+      <li>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/Dudeldups"
+          className={`btn flex items-center gap-2 ${hasRoundedButtons ? "aspect-square rounded-full" : ""}`}
+        >
+          <FaGithub className="text-2xl text-darkest" />
+          <span className={`text-darkest ${hideText ? "hidden" : ""}`}>
+            GitHub
+          </span>
+        </a>
+      </li>
+    </ul>
   );
 };
 
