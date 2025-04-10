@@ -11,7 +11,7 @@ export const de = {
     [KEYS.NAV.PROJECTS]: "Projekte",
     [KEYS.NAV.CONTACT]: "Kontakt",
 
-    [KEYS.INTRO.TITLE]: "Hi, ich bin <1>Arne</1>!",
+    [KEYS.INTRO.TITLE]: "<0>Hi, ich bin</0><1/><2>Arne Jacob</2><3>!</3>",
     [KEYS.INTRO.JOB]: "Full Stack Entwickler",
     [KEYS.INTRO.DESC]:
       "Ich baue coole Sachen für das Web.<1/>Barrierefrei, performant und benutzerfreundlich.",
@@ -19,7 +19,7 @@ export const de = {
 
     [KEYS.ABOUT.TITLE]: "Über mich",
     [KEYS.ABOUT.DESC]:
-      "Hey, ich bin Arne Jacob und ich bin Full Stack Entwickler. JavaScript-Spiele haben mich zum Programmieren gebracht, und was als spaßige Herausforderung begann, hat meine Leidenschaft für die Webentwicklung entfacht. Ich konzentriere mich darauf, benutzerfreundliche Oberflächen zu schaffen und nahtlose Funktionalität in alles zu bringen, woran ich arbeite.",
+      "Hey, mein Name ist Arne und ich bin Full Stack Entwickler. JavaScript-Spiele haben mich zum Programmieren gebracht, und was als spaßige Herausforderung begann, hat meine Leidenschaft für die Webentwicklung entfacht. Ich konzentriere mich darauf, benutzerfreundliche Oberflächen zu schaffen und nahtlose Funktionalität in alles zu bringen, woran ich arbeite.",
     [KEYS.ABOUT.DESC_2]:
       "Ich lege großen Wert auf sauberen, wartbaren Code und entwickle Anwendungen, die nicht nur funktionieren, sondern sich auch intuitiv anfühlen.",
     [KEYS.ABOUT.DESC_3]:
