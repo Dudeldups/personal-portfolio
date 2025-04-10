@@ -9,7 +9,7 @@ const Projects = () => {
   return (
     <section id="projects" className="section px-page">
       <div className="mx-auto w-full max-w-page">
-        <hgroup className="mx-auto max-w-[25rem] text-center">
+        <hgroup className="mx-auto text-center max-lg:max-w-[25rem] lg:text-left">
           <h2>{t(KEYS.PROJECTS.TITLE)}</h2>
           <p>{t(KEYS.PROJECTS.DESC)}</p>
         </hgroup>

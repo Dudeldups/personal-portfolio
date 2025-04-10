@@ -7,13 +7,13 @@ const Skills = () => {
   const { t } = useTranslation();
 
   return (
-    <section id="skills" className="section bg-dark px-page">
-      <div className="mx-auto w-full max-w-page text-center">
+    <section id="skills" className="section px-page max-lg:bg-dark">
+      <div className="mx-auto w-full max-w-page text-center lg:text-left">
         <hgroup>
           <h2>{t(KEYS.SKILLS.TITLE)}</h2>
-          <p className="mx-auto max-w-96">{t(KEYS.SKILLS.DESC)}</p>
+          <p className="mx-auto max-lg:max-w-96">{t(KEYS.SKILLS.DESC)}</p>
         </hgroup>
-        <ul className="mx-auto mt-10 flex max-w-[22rem] flex-wrap justify-center gap-8">
+        <ul className="mx-auto mt-10 flex max-w-[22rem] flex-wrap justify-center gap-8 lg:mt-16">
           {skills.map(
             (skill) =>
               !skill.isHidden && (
