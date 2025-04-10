@@ -6,8 +6,8 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-dark px-page">
-      <div className="mx-auto max-w-page py-4 text-center md:py-6">
+    <footer className="w-full px-page max-lg:bg-dark">
+      <div className="mx-auto max-w-page py-6 text-center lg:pb-14">
         <p>
           &copy; {currentYear} Arne Jacob - {t(KEYS.FOOTER.DISCLAIMER)}
         </p>
