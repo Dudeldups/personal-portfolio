@@ -14,7 +14,7 @@
 
   --breakpoint-xs: 30rem;
 
-  --spacing-page: 68.75rem;
+  --spacing-page: 75rem;
 }
 
 @layer base {
@@ -31,11 +31,11 @@
   }
 
   h1 {
-    @apply text-5xl sm:text-6xl md:text-[clamp(3rem,_-1.9655rem_+_10.3448vw,_4.5rem)] lg:text-7xl;
+    @apply text-5xl sm:text-6xl lg:text-7xl;
   }
 
   h2 {
-    @apply text-4xl text-primary md:text-5xl;
+    @apply text-4xl text-primary capitalize md:text-5xl;
 
     & + p {
       @apply mt-6 md:mt-8;
@@ -55,15 +55,7 @@
 
 @layer components {
   .btn {
-    @apply relative inline-flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-1.5 text-sm font-medium text-white shadow-lg shadow-gray-600 transition duration-150 ease-in-out;
-  }
-
-  .portrait-img {
-    max-width: min(100%, 26rem);
-
-    @variant md {
-      max-width: min(100%, clamp(26rem, 6.1379rem + 41.3793vw, 32rem));
-    }
+    @apply relative inline-flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-1.5 text-sm font-medium text-white shadow-md shadow-gray-500 transition duration-150 ease-in-out;
   }
 }
 
