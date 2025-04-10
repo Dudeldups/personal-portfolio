@@ -2,14 +2,18 @@ import { useTranslation } from "react-i18next";
 import { availableLanguages } from "../../i18n/i18n";
 import { KEYS } from "../../i18n/KEYS";
 
-const LanguageSwitcher = () => {
+type LanguageSwitcherProps = {
+  className?: string;
+};
+
+const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
   const { t, i18n } = useTranslation();
 
   const changeLanguage = (event: React.ChangeEvent<HTMLSelectElement>) =>
     i18n.changeLanguage(event.target.value);
 
   return (
-    <div className="ml-6">
+    <div className={className}>
       <select
         onChange={changeLanguage}
         name="language"
