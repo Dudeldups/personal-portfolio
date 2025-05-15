@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { KEYS } from "../../i18n/KEYS";
 import projects from "../../data/projects.json";
-import TechIcon from "../Skills/TechIcon";
 
 const Projects = () => {
   const { t } = useTranslation();
@@ -26,7 +25,7 @@ const Projects = () => {
                 key={project.title}
                 className="border-t-dark-light pt-8 not-first:border-t-2"
               >
-                <div className="flex flex-col items-center gap-7 lg:flex-row lg:gap-20">
+                <div className="flex flex-col items-center gap-7 lg:items-start">
                   <hgroup className="max-w-2xs text-center lg:text-left">
                     <h3 className="mb-5 text-2xl underline decoration-white underline-offset-4">
                       {t(titleString)}
@@ -34,14 +33,15 @@ const Projects = () => {
                     <p>{t(descString)}</p>
                   </hgroup>
 
-                  <div className="flex justify-center gap-8">
+                  <div className="flex justify-center gap-4">
                     {project.techs.map((tech) => (
                       <div
                         key={project.title + tech}
-                        className="flex flex-col items-center gap-2 text-sm font-bold text-white"
+                        className="rounded-md border-1 border-white px-2 py-0.5"
                       >
-                        <TechIcon tech={tech} className="text-2xl" />
-                        <span>{tech}</span>
+                        <span className="text-sm font-bold text-white">
+                          {tech}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -55,7 +55,7 @@ const Projects = () => {
                   />
                 </picture>
 
-                <div className="mt-6 flex justify-center gap-5">
+                <div className="mt-8 flex justify-center gap-5">
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
