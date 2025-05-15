@@ -38,10 +38,10 @@ export const en = {
 
     [KEYS.PROJECTS.SCOOT.TITLE]: "Scoot Website",
     [KEYS.PROJECTS.SCOOT.DESC]:
-      "A multipage website for a fictional scooter rental service",
+      "A multi-page website for a fictional scooter rental service",
     [KEYS.PROJECTS.COFFEEROASTERS.TITLE]: "Coffeeroasters Website",
     [KEYS.PROJECTS.COFFEEROASTERS.DESC]:
-      "A multipage website for a fictional coffee company",
+      "A multi-page website for a fictional coffee company",
     [KEYS.PROJECTS.MAKER.TITLE]: "Maker Landing Page",
     [KEYS.PROJECTS.MAKER.DESC]: "A landing page for a fictional product",
     [KEYS.PROJECTS.PORTFOLIO.TITLE]: "Portfolio Website",
