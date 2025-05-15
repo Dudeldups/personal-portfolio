@@ -3,28 +3,28 @@
     "title": "Scoot",
     "techs": ["React", "TypeScript", "Styled Components"],
     "image": "scoot.png",
-    "demoLink": "https://github.com",
-    "githubLink": "https://github.com"
+    "demoLink": "https://dudeldups.github.io/FM-scoot-website/",
+    "githubLink": "https://github.com/Dudeldups/FM-scoot-website"
   },
   {
     "title": "Coffeeroasters",
     "techs": ["React", "TypeScript", "Tailwind CSS"],
     "image": "coffeeroasters.png",
-    "demoLink": "https://github.com",
-    "githubLink": "https://github.com"
+    "demoLink": "https://coffeeroasters-9000.netlify.app/",
+    "githubLink": "https://github.com/Dudeldups/FM-coffeeroasters"
   },
   {
     "title": "Maker",
     "techs": ["HTML", "TypeScript", "Tailwind CSS"],
     "image": "maker.png",
-    "demoLink": "https://github.com",
-    "githubLink": "https://github.com"
+    "demoLink": "https://dudeldups.github.io/FM-maker-landing-page/",
+    "githubLink": "https://github.com/Dudeldups/FM-maker-landing-page"
   },
   {
     "title": "Portfolio",
     "techs": ["React", "TypeScript", "Tailwind CSS"],
     "image": "portfolio.png",
-    "demoLink": "https://github.com",
-    "githubLink": "https://github.com"
+    "demoLink": "https://dudeldups.dev",
+    "githubLink": "https://github.com/Dudeldups/personal-portfolio"
   }
 ]
