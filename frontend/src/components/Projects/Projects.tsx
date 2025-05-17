@@ -51,7 +51,7 @@ const Projects = () => {
                   <img
                     src={`/assets/images/project-previews/${project.image}`}
                     alt={`Preview of the ${project.title} website`}
-                    className="aspect-[16/9] w-full object-cover object-top transition-[object-position] duration-6500 hover:object-bottom"
+                    className="aspect-[16/9] w-full object-cover object-top transition-[object-position] duration-3000 hover:object-bottom"
                   />
                 </picture>
 
