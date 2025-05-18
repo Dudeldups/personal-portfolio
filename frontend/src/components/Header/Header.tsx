@@ -25,19 +25,19 @@ const Header = () => {
         <LanguageSwitcher className="self-end lg:hidden" />
 
         <div
-          className={`mt-8 mb-12 text-center transition-transform lg:text-left ${isScrolled ? "-translate-y-20 delay-700 duration-1000 ease-in-out" : "duration-700"}`}
+          className={`mt-8 mb-12 text-center transition-transform lg:text-left ${isScrolled ? "delay-700 duration-1000 ease-in-out lg:-translate-y-20" : "duration-700"}`}
         >
           <h1 className="">
             <Trans i18nKey={KEYS.INTRO.TITLE}>
               <span
-                className={`inline-block transition-all duration-500 ${isScrolled ? "-translate-y-40 scale-y-90 opacity-0 delay-200 ease-in" : "delay-500"}`}
+                className={`inline-block transition-all duration-500 ${isScrolled ? "delay-200 ease-in lg:-translate-y-40 lg:scale-y-90 lg:opacity-0" : "delay-500"}`}
               >
                 0
               </span>
               <br />
               <span className="underline decoration-primary">2</span>
               <span
-                className={`inline-block transition-all duration-500 ${isScrolled ? "scale-90 opacity-0 delay-100" : "opacity-100 delay-700"}`}
+                className={`inline-block transition-all duration-500 ${isScrolled ? "delay-100 lg:scale-90 lg:opacity-0" : "opacity-100 delay-700"}`}
               >
                 3
               </span>
