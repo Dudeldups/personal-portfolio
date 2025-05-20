@@ -9,8 +9,12 @@ import { useRefStore } from "../../stores/refStore";
 const Header = () => {
   const { t } = useTranslation();
   const aboutRef = useRefStore((state) => state.refs["about"]);
+  const contactRef = useRefStore((state) => state.refs["contact"]);
 
   const isAboutInView = useInView(aboutRef ?? { current: null });
+  const isContactInView = useInView(contactRef ?? { current: null }, {
+    amount: 0.75,
+  });
 
   return (
     <header className={`top-0 w-full shrink-[1.25] px-page lg:sticky`}>
@@ -49,14 +53,16 @@ const Header = () => {
 
         <Navbar />
 
-        <div className="mt-auto flex items-end lg:w-full lg:justify-between">
+        <div className="mt-auto flex flex-col gap-7 lg:w-full">
+          <LanguageSwitcher
+            className={`transition-transform duration-300 max-lg:hidden ${isContactInView ? "translate-y-20" : "delay-300"}`}
+          />
+
           <ButtonContainer
             hideText={true}
             hasRoundedButtons={true}
-            className="flex gap-6"
+            className={`flex gap-6 transition-all duration-300 ${isContactInView ? "translate-y-40 opacity-0" : "delay-300"}`}
           />
-
-          <LanguageSwitcher className="max-lg:hidden" />
         </div>
       </div>
     </header>
