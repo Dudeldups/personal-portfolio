@@ -1,12 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { KEYS } from "../../i18n/KEYS";
 import projects from "../../data/projects.json";
+import { useStoreRef } from "../../hooks/useStoreRef";
 
 const Projects = () => {
   const { t } = useTranslation();
+  const projectsRef = useStoreRef("projects");
 
   return (
-    <section id="projects" className="section px-page">
+    <section ref={projectsRef} id="projects" className="section px-page">
       <div className="mx-auto w-full max-w-page">
         <hgroup className="mx-auto text-center max-lg:max-w-[25rem] lg:text-left">
           <h2>{t(KEYS.PROJECTS.TITLE)}</h2>
