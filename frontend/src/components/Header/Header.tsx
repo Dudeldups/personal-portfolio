@@ -3,21 +3,14 @@ import ButtonContainer from "../ButtonContainer/ButtonContainer";
 import Navbar from "./Navbar";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { KEYS } from "../../i18n/KEYS";
-import { useMotionValueEvent, useScroll } from "motion/react";
-import { useState } from "react";
+import { useInView } from "motion/react";
+import { useRefStore } from "../../stores/refStore";
 
 const Header = () => {
   const { t } = useTranslation();
-  const { scrollYProgress } = useScroll();
-  const [isScrolled, setIsScrolled] = useState(false);
+  const aboutRef = useRefStore((state) => state.refs["about"]);
 
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (latest > 0.1) {
-      setIsScrolled(true);
-    } else {
-      setIsScrolled(false);
-    }
-  });
+  const isAboutInView = useInView(aboutRef ?? { current: null });
 
   return (
     <header className={`top-0 w-full shrink-[1.25] px-page lg:sticky`}>
@@ -25,19 +18,19 @@ const Header = () => {
         <LanguageSwitcher className="self-end lg:hidden" />
 
         <div
-          className={`mt-8 mb-12 text-center transition-transform lg:text-left ${isScrolled ? "delay-700 duration-1000 ease-in-out lg:-translate-y-20" : "duration-700"}`}
+          className={`mt-8 mb-12 text-center transition-transform lg:text-left ${isAboutInView ? "duration-700" : "delay-700 duration-1000 ease-in-out lg:-translate-y-20"}`}
         >
           <h1 className="">
             <Trans i18nKey={KEYS.INTRO.TITLE}>
               <span
-                className={`inline-block transition-all duration-500 ${isScrolled ? "delay-200 ease-in lg:-translate-y-40 lg:scale-y-90 lg:opacity-0" : "delay-500"}`}
+                className={`inline-block transition-all duration-500 ${isAboutInView ? "delay-500" : "delay-200 ease-in lg:-translate-y-40 lg:scale-y-90 lg:opacity-0"}`}
               >
                 0
               </span>
               <br />
               <span className="underline decoration-primary">2</span>
               <span
-                className={`inline-block transition-all duration-500 ${isScrolled ? "delay-100 lg:scale-90 lg:opacity-0" : "opacity-100 delay-700"}`}
+                className={`inline-block transition-all duration-500 ${isAboutInView ? "opacity-100 delay-700" : "delay-100 lg:scale-90 lg:opacity-0"}`}
               >
                 3
               </span>
