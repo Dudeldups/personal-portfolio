@@ -10,7 +10,7 @@ const Intro = () => {
     <section
       ref={aboutRef}
       id="about"
-      className="px-page py-10 md:pb-14 lg:pt-18"
+      className="section px-page md:pb-14 lg:pt-18"
     >
       <div className="mx-auto w-full max-w-page text-center lg:text-left">
         <hgroup className="mx-auto mt-8 max-lg:max-w-md lg:mt-0 lg:text-left">
