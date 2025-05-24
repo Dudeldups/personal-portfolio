@@ -49,13 +49,13 @@
   }
 
   .section {
-    @apply py-10 md:py-14;
+    @apply py-14;
   }
 }
 
 @layer components {
   .btn {
-    @apply relative inline-flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-1.5 text-sm font-medium text-white shadow-md shadow-gray-500 transition duration-150 ease-in-out;
+    @apply relative inline-flex items-center justify-center rounded-md border border-transparent bg-light px-4 py-1.5 text-sm font-medium text-white shadow-md shadow-gray-500 transition duration-150 ease-in-out;
   }
 }
 
