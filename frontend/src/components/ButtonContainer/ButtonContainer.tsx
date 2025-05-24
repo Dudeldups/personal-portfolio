@@ -18,8 +18,6 @@ const ButtonContainer = ({
   const { t } = useTranslation();
 
   return (
-    // TODO: Fix links
-
     <ul className={className}>
       <li>
         <a

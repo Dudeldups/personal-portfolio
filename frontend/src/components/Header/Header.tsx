@@ -1,5 +1,5 @@
 import { Trans, useTranslation } from "react-i18next";
-import ButtonContainer from "../ButtonContainer/ButtonContainer";
+import ButtonContainer from "./ButtonContainer";
 import Navbar from "./Navbar";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { KEYS } from "../../i18n/KEYS";
@@ -58,11 +58,7 @@ const Header = () => {
             className={`transition-transform duration-300 max-lg:hidden ${isContactInView ? "translate-y-20" : "delay-300"}`}
           />
 
-          <ButtonContainer
-            hideText={true}
-            hasRoundedButtons={true}
-            className={`flex gap-6 transition-all duration-300 ${isContactInView ? "translate-y-40 opacity-0" : "delay-300"}`}
-          />
+          <ButtonContainer isContactInView={isContactInView} />
         </div>
       </div>
     </header>
