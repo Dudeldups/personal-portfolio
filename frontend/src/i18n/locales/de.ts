@@ -47,6 +47,9 @@ export const de = {
     [KEYS.PROJECTS.PORTFOLIO.TITLE]: "Portfolio Webseite",
     [KEYS.PROJECTS.PORTFOLIO.DESC]:
       "Meine Portfolio-Website, die meine Projekte und Fähigkeiten präsentiert",
+    [KEYS.PROJECTS.BIG_AMBITIONS_TOOLS.TITLE]: "Big Ambitions Tools",
+    [KEYS.PROJECTS.BIG_AMBITIONS_TOOLS.DESC]:
+      "Eine Begleit-App für das Spiel Big Ambitions, die Spieler dabei unterstützt, ihre Fabriklayouts und Logistik zu planen, zu optimieren und zu verwalten.",
 
     [KEYS.CONTACT.TITLE]: "Kontakt",
     [KEYS.CONTACT.DESC]:

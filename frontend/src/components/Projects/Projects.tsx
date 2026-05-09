@@ -17,14 +17,13 @@ const Projects = () => {
 
         <ul className="mt-12 grid gap-12">
           {projects.map((project) => {
-            const uppercaseTitle =
-              project.title.toUpperCase() as keyof typeof KEYS.PROJECTS;
-            const titleString = "PROJECTS." + uppercaseTitle + ".TITLE";
-            const descString = "PROJECTS." + uppercaseTitle + ".DESC";
+            const translationId = project.id.toUpperCase();
+            const titleString = `PROJECTS.${translationId}.TITLE`;
+            const descString = `PROJECTS.${translationId}.DESC`;
 
             return (
               <li
-                key={project.title}
+                key={project.id}
                 className="border-t-dark-light pt-8 not-first:border-t-2"
               >
                 <div className="flex flex-col items-center gap-7 lg:items-start">
@@ -38,7 +37,7 @@ const Projects = () => {
                   <div className="flex justify-center gap-4">
                     {project.techs.map((tech) => (
                       <div
-                        key={project.title + tech}
+                        key={project.id + tech}
                         className="rounded-md border-1 border-white px-2 py-0.5"
                       >
                         <span className="text-sm font-bold text-white">
