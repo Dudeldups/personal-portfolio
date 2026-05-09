@@ -1,5 +1,14 @@
 [
   {
+    "id": "bat",
+    "title": "Big Ambitions Tools",
+    "techs": ["NextJS", "TypeScript", "Tailwind CSS"],
+    "image": "big-ambitions-tools.png",
+    "demoLink": "https://big-ambitions-tools.com",
+    "githubLink": "https://github.com/Dudeldups/big-ambitions-tools"
+  },
+  {
+    "id": "scoot",
     "title": "Scoot",
     "techs": ["React", "TypeScript", "Styled Components"],
     "image": "scoot.png",
@@ -7,6 +16,7 @@
     "githubLink": "https://github.com/Dudeldups/FM-scoot-website"
   },
   {
+    "id": "coffeeroasters",
     "title": "Coffeeroasters",
     "techs": ["React", "TypeScript", "Tailwind CSS"],
     "image": "coffeeroasters.png",
@@ -14,17 +24,11 @@
     "githubLink": "https://github.com/Dudeldups/FM-coffeeroasters"
   },
   {
+    "id": "maker",
     "title": "Maker",
     "techs": ["HTML", "TypeScript", "Tailwind CSS"],
     "image": "maker.png",
     "demoLink": "https://dudeldups.github.io/FM-maker-landing-page/",
     "githubLink": "https://github.com/Dudeldups/FM-maker-landing-page"
-  },
-  {
-    "title": "Portfolio",
-    "techs": ["React", "TypeScript", "Tailwind CSS"],
-    "image": "portfolio.png",
-    "demoLink": "https://dudeldups.dev",
-    "githubLink": "https://github.com/Dudeldups/personal-portfolio"
   }
 ]
