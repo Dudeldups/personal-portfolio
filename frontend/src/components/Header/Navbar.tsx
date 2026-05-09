@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { KEYS } from "../../i18n/KEYS";
 import { useInView } from "motion/react";
 import { useRefStore } from "../../stores/refStore";
 import { motion } from "framer-motion";
@@ -49,7 +48,7 @@ const Navbar = () => {
             transition={{ duration: 0.3 }}
             className={`h-0.5`}
           />
-          <a href="#about">{t(KEYS.NAV.ABOUT)}</a>
+          <a href="#about">{t("nav.about")}</a>
         </li>
         <li className="flex items-center gap-5">
           <motion.span
@@ -59,7 +58,7 @@ const Navbar = () => {
             transition={{ duration: 0.3 }}
             className={`h-0.5`}
           />
-          <a href="#projects">{t(KEYS.NAV.PROJECTS)}</a>
+          <a href="#projects">{t("nav.projects")}</a>
         </li>
         <li className="flex items-center gap-5">
           <motion.span
@@ -69,7 +68,7 @@ const Navbar = () => {
             transition={{ duration: 0.3 }}
             className={`h-0.5`}
           />
-          <a href="#contact">{t(KEYS.NAV.CONTACT)}</a>
+          <a href="#contact">{t("nav.contact")}</a>
         </li>
       </ul>
     </nav>

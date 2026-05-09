@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { availableLanguages } from "../../i18n/i18n";
-import { KEYS } from "../../i18n/KEYS";
 
 type LanguageSwitcherProps = {
   className?: string;
@@ -19,7 +18,7 @@ const LanguageSwitcher = ({ className }: LanguageSwitcherProps) => {
         name="language"
         id="language-select"
         value={i18n.language}
-        aria-label={t(KEYS.GENERAL.SWITCHER_LABEL)}
+        aria-label={t("general.switcherLabel")}
         className="cursor-pointer"
       >
         {Object.entries(availableLanguages).map(([key, label]) => (

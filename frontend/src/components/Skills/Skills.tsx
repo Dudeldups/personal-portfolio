@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { KEYS } from "../../i18n/KEYS";
 import skills from "../../data/skills.json";
 import TechIcon from "./TechIcon";
 
@@ -10,8 +9,8 @@ const Skills = () => {
     <section id="skills" className="section px-page max-lg:bg-dark">
       <div className="mx-auto w-full max-w-page text-center lg:text-left">
         <hgroup>
-          <h2>{t(KEYS.SKILLS.TITLE)}</h2>
-          <p className="mx-auto max-lg:max-w-96">{t(KEYS.SKILLS.DESC)}</p>
+          <h2>{t("skills.title")}</h2>
+          <p className="mx-auto max-lg:max-w-96">{t("skills.desc")}</p>
         </hgroup>
         <ul className="mx-auto mt-10 flex max-w-[22rem] flex-wrap justify-center gap-8 lg:mt-16">
           {skills.map(

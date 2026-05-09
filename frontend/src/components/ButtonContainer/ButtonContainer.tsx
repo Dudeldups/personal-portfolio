@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { KEYS } from "../../i18n/KEYS";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaLinkedin } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa6";
@@ -27,7 +26,7 @@ const ButtonContainer = ({
           <MdOutlineEmail className="text-2xl text-darkest" />
 
           <span className={`text-darkest ${hideText ? "hidden" : ""}`}>
-            {t(KEYS.CONTACT.BUTTON)}
+            {t("contact.button")}
           </span>
         </a>
       </li>

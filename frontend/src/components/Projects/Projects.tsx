@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { KEYS } from "../../i18n/KEYS";
 import projects from "../../data/projects.json";
 import { useStoreRef } from "../../hooks/useStoreRef";
 
@@ -11,15 +10,14 @@ const Projects = () => {
     <section ref={projectsRef} id="projects" className="section px-page">
       <div className="mx-auto w-full max-w-page">
         <hgroup className="mx-auto text-center max-lg:max-w-[25rem] lg:text-left">
-          <h2>{t(KEYS.PROJECTS.TITLE)}</h2>
-          <p>{t(KEYS.PROJECTS.DESC)}</p>
+          <h2>{t("projects.title")}</h2>
+          <p>{t("projects.desc")}</p>
         </hgroup>
 
         <ul className="mt-12 grid gap-12">
           {projects.map((project) => {
-            const translationId = project.id.toUpperCase();
-            const titleString = `PROJECTS.${translationId}.TITLE`;
-            const descString = `PROJECTS.${translationId}.DESC`;
+            const titleString = `projects.${project.id}.title`;
+            const descString = `projects.${project.id}.desc`;
 
             return (
               <li
@@ -63,7 +61,7 @@ const Projects = () => {
                     href={project.demoLink}
                     className="btn font-bold text-darkest"
                   >
-                    {t(KEYS.PROJECTS.LIVE_BUTTON)}
+                    {t("projects.liveButton")}
                   </a>
                   <a
                     target="_blank"
@@ -71,7 +69,7 @@ const Projects = () => {
                     href={project.githubLink}
                     className="btn font-bold text-darkest"
                   >
-                    {t(KEYS.PROJECTS.GITHUB_BUTTON)}
+                    {t("projects.githubButton")}
                   </a>
                 </div>
               </li>

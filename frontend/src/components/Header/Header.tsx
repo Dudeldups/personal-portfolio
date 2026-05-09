@@ -2,7 +2,6 @@ import { Trans, useTranslation } from "react-i18next";
 import ButtonContainer from "./ButtonContainer";
 import Navbar from "./Navbar";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { KEYS } from "../../i18n/KEYS";
 import { useInView } from "motion/react";
 import { useRefStore } from "../../stores/refStore";
 
@@ -25,7 +24,7 @@ const Header = () => {
           className={`mt-8 mb-12 text-center transition-transform lg:text-left ${isAboutInView ? "duration-700" : "delay-700 duration-1000 ease-in-out lg:-translate-y-20"}`}
         >
           <h1 className="">
-            <Trans i18nKey={KEYS.INTRO.TITLE}>
+            <Trans i18nKey="intro.title">
               <span
                 className={`inline-block transition-all duration-500 ${isAboutInView ? "delay-500" : "delay-200 ease-in lg:-translate-y-40 lg:scale-y-90 lg:opacity-0"}`}
               >
@@ -42,10 +41,10 @@ const Header = () => {
           </h1>
 
           <h2 className="mt-8 text-2xl font-bold text-white sm:text-3xl md:mt-7 lg:text-4xl">
-            {t(KEYS.INTRO.JOB)}
+            {t("intro.job")}
           </h2>
           <p className="mt-6 text-lg max-lg:max-w-md sm:text-xl md:mt-8">
-            <Trans i18nKey={KEYS.INTRO.DESC}>
+            <Trans i18nKey="intro.desc">
               0 <br />2
             </Trans>
           </p>
