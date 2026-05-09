@@ -19,7 +19,7 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    debug: process.env.NODE_ENV === "development",
+    debug: import.meta.env.DEV,
 
     resources,
     detection: {
