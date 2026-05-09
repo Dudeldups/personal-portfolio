@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import { KEYS } from "../../i18n/KEYS";
 import { useInView } from "motion/react";
 import { useRefStore } from "../../stores/refStore";
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const spanVariants = {
@@ -19,7 +18,6 @@ const spanVariants = {
 
 const Navbar = () => {
   const { t } = useTranslation();
-  const [currentView, setCurrentView] = useState<string>("");
   const aboutRef = useRefStore((state) => state.refs["about"]);
   const projectsRef = useRefStore((state) => state.refs["projects"]);
   const contactRef = useRefStore((state) => state.refs["contact"]);
@@ -32,15 +30,13 @@ const Navbar = () => {
     amount: "all",
   });
 
-  useEffect(() => {
-    if (isAboutInView) {
-      setCurrentView("about");
-    } else if (isContactInView) {
-      setCurrentView("contact");
-    } else if (isProjectsInView) {
-      setCurrentView("projects");
-    }
-  }, [isAboutInView, isProjectsInView, isContactInView]);
+  const currentView = isAboutInView
+    ? "about"
+    : isContactInView
+      ? "contact"
+      : isProjectsInView
+        ? "projects"
+        : "";
 
   return (
     <nav className="max-lg:hidden">
