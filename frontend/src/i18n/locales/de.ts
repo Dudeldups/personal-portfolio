@@ -57,6 +57,78 @@ export const de = {
       desc: "Ich bin immer offen für neue Projekte. Egal, ob du eine Frage hast oder einfach nur Hallo sagen möchtest, ich würde mich über eine Nachricht freuen.",
       button: "Schreib mir",
     },
+    legal: {
+      backHome: "Zur Startseite",
+      imprint: {
+        title: "Impressum",
+        providerTitle: "Angaben gemäß § 5 DDG",
+        emailLabel: "E-Mail",
+        responsibleTitle: "Verantwortlich für den Inhalt",
+      },
+      privacy: {
+        title: "Datenschutzerklärung",
+        generalTitle: "Allgemeine Hinweise",
+        generalBody:
+          "Diese Website verarbeitet personenbezogene Daten ausschließlich im Rahmen der gesetzlichen Bestimmungen, insbesondere der DSGVO.",
+        controllerTitle: "Verantwortlicher im Sinne der DSGVO",
+        logsTitle: "Zugriffsdaten (Server-Logs)",
+        logsBody:
+          "Beim Aufrufen dieser Website werden automatisch Informationen durch den Server erfasst. Diese Daten dienen ausschließlich der technischen Bereitstellung und Sicherheit der Website.",
+        logsItems: {
+          ip: "IP-Adresse (gekürzt oder anonymisiert)",
+          timestamp: "Datum und Uhrzeit der Anfrage",
+          page: "aufgerufene Seite",
+          browser: "Browsertyp und Version",
+          os: "Betriebssystem",
+        },
+        logsLegalBasis: "Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO",
+        analyticsTitle: "Verwendung von Umami Analytics",
+        analyticsBody:
+          "Diese Website nutzt Umami Analytics, ein datenschutzfreundliches Analyse-Tool. Umami wird auf einem eigenen Server betrieben und verarbeitet keine personenbezogenen Daten im klassischen Sinne.",
+        analyticsCollectedTitle: "Erfasste Daten",
+        analyticsItems: {
+          pages: "aufgerufene Seiten",
+          referrer: "Referrer (Herkunft der Besucher)",
+          browserDevice: "verwendeter Browser und Gerätetyp",
+          geo: "ungefähre geografische Herkunft (ohne genaue Standortdaten)",
+        },
+        analyticsSecurityTitle: "Sicherheit & Datenschutz",
+        analyticsSecurityItems: {
+          noCookies: "keine Cookies zu Analysezwecken gesetzt",
+          noProfiles: "keine personenbezogenen Profile erstellt",
+          noThirdParty: "keine Daten an Dritte weitergegeben",
+          anonymized: "die Verarbeitung erfolgt anonymisiert",
+        },
+        analyticsLegalBasis:
+          "Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Analyse der Website-Nutzung)",
+        languageTitle: "Sprachauswahl",
+        languageBody:
+          "Diese Website verwendet keinen Cookie für die Spracheinstellung. Stattdessen wird die gewählte Sprache technisch notwendig im localStorage des Browsers gespeichert.",
+        languageItems: {
+          storage: "Speicherort: localStorage im Browser",
+          purpose: "Zweck: Speicherung der gewählten Sprache",
+          duration:
+            "Speicherdauer: bis zur manuellen Löschung durch den Nutzer oder zum Leeren des Browserspeichers",
+        },
+        languageLegalBasis: "Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO",
+        linksTitle: "Externe Links",
+        linksBody:
+          "Diese Website verlinkt auf externe Dienste wie GitHub und LinkedIn. Wenn du solche Links anklickst, ist der jeweilige Anbieter für die weitere Datenverarbeitung verantwortlich.",
+        rightsTitle: "Rechte der betroffenen Personen",
+        rightsItems: {
+          access: "Auskunft über deine gespeicherten Daten",
+          rectification: "Berichtigung unrichtiger Daten",
+          erasure: "Löschung deiner Daten",
+          restriction: "Einschränkung der Verarbeitung",
+          objection: "Widerspruch gegen die Verarbeitung",
+        },
+        rightsBody: "Hierzu genügt eine formlose Mitteilung per E-Mail.",
+        changesTitle: "Änderungen",
+        changesBody:
+          "Diese Datenschutzerklärung kann angepasst werden, um rechtliche Anforderungen zu erfüllen oder Änderungen der Website umzusetzen.",
+        updatedTitle: "Stand",
+      },
+    },
     footer: {
       disclaimer: "Alle Rechte vorbehalten",
     },
