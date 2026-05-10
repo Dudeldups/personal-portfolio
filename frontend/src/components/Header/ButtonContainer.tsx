@@ -20,7 +20,7 @@ const ButtonContainer = ({ isContactInView }: ButtonContainerProps) => {
           className={`flex size-12 items-center justify-center rounded-full border-2 border-light text-light transition-colors duration-300 ease-in-out hocus-visible:border-primary hocus-visible:text-primary`}
           title="Email"
         >
-          <MdOutlineEmail className="text-lg" />
+          <MdOutlineEmail className="text-xl" />
 
           <span className={`hidden`}>{t("contact.button")}</span>
         </a>
@@ -33,7 +33,7 @@ const ButtonContainer = ({ isContactInView }: ButtonContainerProps) => {
           className={`flex size-12 items-center justify-center rounded-full border-2 border-light text-light transition-colors duration-300 ease-in-out hocus-visible:border-primary hocus-visible:text-primary`}
           title="LinkedIn"
         >
-          <FaLinkedin className="text-lg" />
+          <FaLinkedin className="text-xl" />
           <span className={`hidden`}>LinkedIn</span>
         </a>
       </li>
@@ -45,7 +45,7 @@ const ButtonContainer = ({ isContactInView }: ButtonContainerProps) => {
           className={`flex size-12 items-center justify-center rounded-full border-2 border-light text-light transition-colors duration-300 ease-in-out hocus-visible:border-primary hocus-visible:text-primary`}
           title="GitHub"
         >
-          <FaGithub className="text-lg" />
+          <FaGithub className="text-xl" />
           <span className={`hidden`}>GitHub</span>
         </a>
       </li>
