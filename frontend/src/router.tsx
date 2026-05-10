@@ -1,8 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "./App";
 import HomePage from "./pages/HomePage";
-import ImprintPage from "./pages/ImprintPage";
-import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 
 export const router = createBrowserRouter([
   {
@@ -14,11 +12,17 @@ export const router = createBrowserRouter([
       },
       {
         path: "/impressum",
-        element: <ImprintPage />,
+        lazy: async () => {
+          const module = await import("./pages/ImprintPage");
+          return { Component: module.default };
+        },
       },
       {
         path: "/datenschutz",
-        element: <PrivacyPolicyPage />,
+        lazy: async () => {
+          const module = await import("./pages/PrivacyPolicyPage");
+          return { Component: module.default };
+        },
       },
       {
         path: "*",
