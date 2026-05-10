@@ -50,7 +50,7 @@ const Projects = () => {
                   <img
                     src={`/assets/images/project-previews/${project.image}`}
                     alt={`Preview of the ${project.title} website`}
-                    className="aspect-video w-full object-cover object-top transition-[object-position] duration-3000 hover:object-bottom"
+                    className="aspect-video w-full object-cover object-top transition-[object-position] duration-2500 ease-[cubic-bezier(0.4,0.005,0.6,0.995)] hover:object-bottom"
                   />
                 </picture>
 
