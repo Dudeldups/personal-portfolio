@@ -14,7 +14,7 @@ const Contact = () => {
   return (
     <section ref={contactRef} id="contact" className="section w-full px-page">
       <div className="mx-auto flex w-full max-w-page flex-col gap-12 pb-10">
-        <hgroup className="mx-auto text-center max-lg:max-w-[25rem] lg:text-left">
+        <hgroup className="mx-auto text-center max-lg:max-w-100 lg:text-left">
           <h2>{t("contact.title")}</h2>
           <p>{t("contact.desc")}</p>
         </hgroup>
