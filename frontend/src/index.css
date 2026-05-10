@@ -1,5 +1,29 @@
-@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Oswald:wght@200..700&display=swap");
 @import "tailwindcss";
+
+@font-face {
+  font-family: "Lato";
+  src: url("/assets/fonts/Lato/Lato-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lato";
+  src: url("/assets/fonts/Lato/Lato-Bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Oswald";
+  src: url("/assets/fonts/Oswald/Oswald-VariableFont_wght.ttf")
+    format("truetype");
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+}
 
 @theme {
   --font-lato: "Lato", sans-serif;
