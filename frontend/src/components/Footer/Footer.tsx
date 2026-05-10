@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 const Footer = () => {
   const { t } = useTranslation();
   const { pathname } = useLocation();
+  const startYear = 2025;
   const currentYear = new Date().getFullYear();
   const isHomePage = pathname === "/";
 
@@ -30,7 +31,9 @@ const Footer = () => {
           </Link>
         </nav>
         <p>
-          &copy; {currentYear} Arne Jacob - {t("footer.disclaimer")}
+          &copy; {startYear}
+          {currentYear > startYear ? ` - ${currentYear}` : ""} Arne Jacob -{" "}
+          {t("footer.disclaimer")}
         </p>
       </div>
     </footer>
