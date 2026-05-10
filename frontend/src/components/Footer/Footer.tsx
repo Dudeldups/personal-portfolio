@@ -1,17 +1,21 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Footer = () => {
   const { t } = useTranslation();
+  const { pathname } = useLocation();
   const currentYear = new Date().getFullYear();
+  const isHomePage = pathname === "/";
 
   return (
     <footer className="w-full px-page max-lg:bg-dark">
       <div className="mx-auto flex max-w-page flex-col gap-4 py-6 text-center lg:pb-14">
         <nav className="flex flex-wrap justify-center gap-4 text-sm">
-          <Link to="/" className="transition-colors hover:text-primary">
-            {t("legal.backHome")}
-          </Link>
+          {!isHomePage ? (
+            <Link to="/" className="transition-colors hover:text-primary">
+              {t("legal.backHome")}
+            </Link>
+          ) : null}
           <Link
             to="/impressum"
             className="transition-colors hover:text-primary"
