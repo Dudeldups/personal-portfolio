@@ -9,7 +9,7 @@ const Projects = () => {
   return (
     <section ref={projectsRef} id="projects" className="section px-page">
       <div className="mx-auto w-full max-w-page">
-        <hgroup className="mx-auto text-center max-lg:max-w-[25rem] lg:text-left">
+        <hgroup className="mx-auto text-center max-lg:max-w-100 lg:text-left">
           <h2>{t("projects.title")}</h2>
           <p>{t("projects.desc")}</p>
         </hgroup>
