@@ -50,7 +50,7 @@ const LegalLayout = ({ title, intro, children }: LegalLayoutProps) => {
         <article className="mx-auto max-w-4xl">
           <h1 className="text-4xl md:text-5xl">{title}</h1>
           {intro ? <p className="mt-6 max-w-3xl text-lg">{intro}</p> : null}
-          <div className="mt-10 space-y-10">{children}</div>
+          <div className="legal-wrapper mt-10 space-y-10">{children}</div>
         </article>
       </main>
 
