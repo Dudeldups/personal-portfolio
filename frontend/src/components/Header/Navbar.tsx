@@ -10,7 +10,7 @@ const spanVariants = {
   },
   visible: {
     width: "4rem",
-    backgroundColor: "var(--color-primary)",
+    backgroundColor: "var(--color-accent)",
     transition: { duration: 0.3 },
   },
 };
