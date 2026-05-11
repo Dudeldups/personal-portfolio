@@ -36,9 +36,9 @@ const Projects = () => {
                     {project.techs.map((tech) => (
                       <div
                         key={project.id + tech}
-                        className="rounded-md border border-white px-2 py-0.5"
+                        className="rounded-md bg-light px-2 py-0"
                       >
-                        <span className="text-sm font-bold text-white">
+                        <span className="text-sm font-bold text-darkest">
                           {tech}
                         </span>
                       </div>
