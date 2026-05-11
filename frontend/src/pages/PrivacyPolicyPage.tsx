@@ -14,7 +14,7 @@ const PrivacyPolicyPage = () => {
 
       <section>
         <h2>{t("legal.privacy.controllerTitle")}</h2>
-        <div className="mt-6 space-y-1">
+        <address className="mt-6 space-y-1 not-italic">
           {siteConfig.legalName ? <p>{siteConfig.legalName}</p> : null}
           {siteConfig.legalAddressLines.map((line) => (
             <p key={line}>{line}</p>
@@ -30,7 +30,7 @@ const PrivacyPolicyPage = () => {
               </a>
             </p>
           ) : null}
-        </div>
+        </address>
       </section>
 
       <section>

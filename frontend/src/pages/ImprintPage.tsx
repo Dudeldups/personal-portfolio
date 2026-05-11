@@ -9,7 +9,7 @@ const ImprintPage = () => {
     <LegalLayout title={t("legal.imprint.title")}>
       <section>
         <h2>{t("legal.imprint.providerTitle")}</h2>
-        <div className="mt-6 space-y-1">
+        <address className="mt-6 space-y-1 not-italic">
           {siteConfig.legalName ? <p>{siteConfig.legalName}</p> : null}
           {siteConfig.legalAddressLines.map((line) => (
             <p key={line}>{line}</p>
@@ -25,7 +25,7 @@ const ImprintPage = () => {
               </a>
             </p>
           ) : null}
-        </div>
+        </address>
       </section>
 
       <section>
