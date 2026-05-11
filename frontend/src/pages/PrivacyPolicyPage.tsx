@@ -21,7 +21,7 @@ const PrivacyPolicyPage = () => {
           ))}
           {siteConfig.legalEmail ? (
             <p>
-              E-Mail:{" "}
+              {t("legal.imprint.emailLabel")}:{" "}
               <a
                 className="text-primary hover:underline"
                 href={`mailto:${siteConfig.legalEmail}`}
