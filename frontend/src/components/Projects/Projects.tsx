@@ -26,7 +26,7 @@ const Projects = () => {
               >
                 <div className="flex flex-col items-center gap-7 lg:items-start">
                   <hgroup className="text-center max-lg:max-w-md lg:text-left">
-                    <h3 className="mb-5 text-2xl underline decoration-white underline-offset-4">
+                    <h3 className="mb-5 text-2xl underline decoration-accent underline-offset-4">
                       {t(titleString)}
                     </h3>
                     <p>{t(descString)}</p>
