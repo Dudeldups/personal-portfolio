@@ -47,7 +47,20 @@
   }
 
   body {
-    @apply bg-darkest font-lato text-base text-light;
+    background-color: var(--color-darkest);
+    @apply font-lato text-base text-light;
+  }
+
+  @media (min-width: 75rem) {
+    body {
+      background-image: linear-gradient(
+        90deg,
+        black -20%,
+        var(--color-darkest) calc(50% - calc(var(--spacing-page) / 2)),
+        var(--color-darkest) calc(50% + calc(var(--spacing-page) / 2)),
+        black 120%
+      );
+    }
   }
 
   :where(h1, h2, h3, h4, h5, h6) {
