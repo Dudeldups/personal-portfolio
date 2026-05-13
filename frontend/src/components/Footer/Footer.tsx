@@ -9,8 +9,8 @@ const Footer = () => {
   const isHomePage = pathname === "/";
 
   return (
-    <footer className="w-full px-page max-lg:bg-dark">
-      <div className="mx-auto flex max-w-page flex-col gap-4 py-6 text-center lg:pb-14">
+    <footer className="w-full px-page max-lg:bg-dark lg:pb-14">
+      <div className="mx-auto flex max-w-page flex-col gap-4 py-6 text-center lg:rounded-3xl lg:border lg:border-light/10 lg:bg-darkest/75 lg:px-8 lg:py-8">
         <nav className="flex flex-wrap justify-center gap-4 text-sm">
           {!isHomePage ? (
             <Link to="/" className="transition-colors hover:text-primary">
