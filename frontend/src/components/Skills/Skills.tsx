@@ -8,7 +8,7 @@ const Skills = () => {
   const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement | null>(null);
   const hasRevealedColors = useInView(sectionRef, {
-    amount: 0.35,
+    amount: 1,
     once: true,
   });
 
@@ -25,7 +25,7 @@ const Skills = () => {
         </hgroup>
         <ul className="mx-auto mt-10 flex max-w-88 flex-wrap justify-center gap-8 lg:mt-16">
           {skills.map(
-            (skill) =>
+            (skill, index) =>
               !skill.isHidden && (
                 <li
                   key={skill.name}
@@ -33,8 +33,9 @@ const Skills = () => {
                 >
                   <TechIcon
                     tech={skill.name}
+                    delayMs={index * 90}
                     isColored={hasRevealedColors}
-                    className="text-3xl transition-all duration-1500 xs:text-5xl"
+                    className="text-3xl xs:text-5xl"
                   />
                   <span className="md:text-lg">{skill.name}</span>
                 </li>

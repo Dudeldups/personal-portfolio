@@ -1,19 +1,33 @@
-import { FaHtml5 } from "react-icons/fa6";
-import { SiTypescript } from "react-icons/si";
-import { FaReact } from "react-icons/fa6";
-import { FaCss3Alt } from "react-icons/fa6";
-import { SiNodedotjs } from "react-icons/si";
-import { SiMongodb } from "react-icons/si";
-import { SiPostgresql } from "react-icons/si";
-import { FaSass } from "react-icons/fa6";
-import { SiTailwindcss } from "react-icons/si";
-import { SiStyledcomponents } from "react-icons/si";
-import { FaLess } from "react-icons/fa6";
+import { FaCss3Alt, FaHtml5, FaLess, FaReact, FaSass } from "react-icons/fa6";
+import type { IconType } from "react-icons";
+import {
+  SiMongodb,
+  SiNodedotjs,
+  SiPostgresql,
+  SiStyledcomponents,
+  SiTailwindcss,
+  SiTypescript,
+} from "react-icons/si";
 
 type TechIconProps = {
   tech: string;
   className?: string;
   isColored?: boolean;
+  delayMs?: number;
+};
+
+const techIcons: Record<string, IconType> = {
+  HTML: FaHtml5,
+  CSS: FaCss3Alt,
+  TypeScript: SiTypescript,
+  React: FaReact,
+  "Node.js": SiNodedotjs,
+  MongoDB: SiMongodb,
+  PostgreSQL: SiPostgresql,
+  Sass: FaSass,
+  "Tailwind CSS": SiTailwindcss,
+  "Styled Components": SiStyledcomponents,
+  Less: FaLess,
 };
 
 const techColors: Record<string, string> = {
@@ -30,37 +44,34 @@ const techColors: Record<string, string> = {
   Less: "#1D365D",
 };
 
-const TechIcon = ({ tech, className, isColored = false }: TechIconProps) => {
-  const iconStyle = {
-    color: isColored ? techColors[tech] : "var(--color-light)",
-  };
+const TechIcon = ({
+  tech,
+  className,
+  isColored = false,
+  delayMs = 0,
+}: TechIconProps) => {
+  const Icon = techIcons[tech];
 
-  switch (tech) {
-    case "HTML":
-      return <FaHtml5 className={className} style={iconStyle} />;
-    case "CSS":
-      return <FaCss3Alt className={className} style={iconStyle} />;
-    case "TypeScript":
-      return <SiTypescript className={className} style={iconStyle} />;
-    case "React":
-      return <FaReact className={className} style={iconStyle} />;
-    case "Node.js":
-      return <SiNodedotjs className={className} style={iconStyle} />;
-    case "MongoDB":
-      return <SiMongodb className={className} style={iconStyle} />;
-    case "PostgreSQL":
-      return <SiPostgresql className={className} style={iconStyle} />;
-    case "Sass":
-      return <FaSass className={className} style={iconStyle} />;
-    case "Tailwind CSS":
-      return <SiTailwindcss className={className} style={iconStyle} />;
-    case "Styled Components":
-      return <SiStyledcomponents className={className} style={iconStyle} />;
-    case "Less":
-      return <FaLess className={className} style={iconStyle} />;
-    default:
-      return null;
+  if (!Icon) {
+    return null;
   }
+
+  return (
+    <span className="relative inline-grid place-items-center">
+      <Icon className={className} style={{ color: "var(--color-light)" }} />
+      <span
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+        style={{
+          clipPath: isColored
+            ? "polygon(0 0, 150% 0, 150% 150%, 0 150%)"
+            : "polygon(0 0, 0 0, 0 0, 0 0)",
+          transition: `clip-path 1700ms cubic-bezier(0.22, 1, 0.36, 1) ${delayMs}ms`,
+        }}
+      >
+        <Icon className={className} style={{ color: techColors[tech] }} />
+      </span>
+    </span>
+  );
 };
 
 export default TechIcon;
