@@ -22,7 +22,7 @@ const Skills = () => {
                 >
                   <TechIcon
                     tech={skill.name}
-                    className="text-2xl xs:text-5xl"
+                    className="text-3xl xs:text-5xl"
                   />
                   <span className="md:text-lg">{skill.name}</span>
                 </li>
