@@ -1,12 +1,23 @@
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { useInView } from "motion/react";
 import skills from "../../data/skills.json";
 import TechIcon from "./TechIcon";
 
 const Skills = () => {
   const { t } = useTranslation();
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const hasRevealedColors = useInView(sectionRef, {
+    amount: 0.35,
+    once: true,
+  });
 
   return (
-    <section id="skills" className="section px-page max-lg:bg-dark">
+    <section
+      ref={sectionRef}
+      id="skills"
+      className="section px-page max-lg:bg-dark"
+    >
       <div className="mx-auto w-full max-w-page text-center lg:text-left">
         <hgroup>
           <h2>{t("skills.title")}</h2>
@@ -22,7 +33,8 @@ const Skills = () => {
                 >
                   <TechIcon
                     tech={skill.name}
-                    className="text-3xl xs:text-5xl"
+                    isColored={hasRevealedColors}
+                    className="text-3xl transition-all duration-1500 xs:text-5xl"
                   />
                   <span className="md:text-lg">{skill.name}</span>
                 </li>
