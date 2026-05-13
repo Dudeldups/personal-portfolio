@@ -54,12 +54,12 @@ const Projects = () => {
                   />
                 </picture>
 
-                <div className="mt-8 flex justify-center gap-5">
+                <div className="mt-8 flex flex-wrap justify-center gap-4">
                   <a
                     target="_blank"
                     rel="noopener noreferrer"
                     href={project.demoLink}
-                    className="btn font-bold text-darkest"
+                    className="inline-flex min-w-35 items-center justify-center rounded-md border border-light/20 bg-light/92 px-5 py-2 text-sm font-bold text-darkest shadow-[0_8px_24px_rgba(0,0,0,0.14)] transition duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/35 hover:bg-primary/90 hover:text-darkest focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-primary"
                   >
                     {t("projects.liveButton")}
                   </a>
@@ -67,7 +67,7 @@ const Projects = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     href={project.githubLink}
-                    className="btn font-bold text-darkest"
+                    className="inline-flex min-w-35 items-center justify-center rounded-md border border-light/16 bg-light/10 px-5 py-2 text-sm font-bold text-light shadow-[0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur-sm transition duration-200 ease-out hover:-translate-y-0.5 hover:border-light/28 hover:bg-light/16 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-accent"
                   >
                     {t("projects.githubButton")}
                   </a>
