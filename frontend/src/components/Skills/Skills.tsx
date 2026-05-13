@@ -12,7 +12,7 @@ const Skills = () => {
           <h2>{t("skills.title")}</h2>
           <p className="mx-auto max-lg:max-w-96">{t("skills.desc")}</p>
         </hgroup>
-        <ul className="mx-auto mt-10 flex max-w-[22rem] flex-wrap justify-center gap-8 lg:mt-16">
+        <ul className="mx-auto mt-10 flex max-w-88 flex-wrap justify-center gap-8 lg:mt-16">
           {skills.map(
             (skill) =>
               !skill.isHidden && (
