@@ -57,20 +57,13 @@ const TechIcon = ({
   }
 
   return (
-    <span className="relative inline-grid place-items-center">
-      <Icon className={className} style={{ color: "var(--color-light)" }} />
-      <span
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-        style={{
-          clipPath: isColored
-            ? "polygon(0 0, 150% 0, 150% 150%, 0 150%)"
-            : "polygon(0 0, 0 0, 0 0, 0 0)",
-          transition: `clip-path 1700ms cubic-bezier(0.22, 1, 0.36, 1) ${delayMs}ms`,
-        }}
-      >
-        <Icon className={className} style={{ color: techColors[tech] }} />
-      </span>
-    </span>
+    <Icon
+      className={className}
+      style={{
+        color: isColored ? techColors[tech] : "var(--color-light)",
+        transition: `color 2000ms cubic-bezier(0.22, 1, 0.36, 1) ${delayMs}ms`,
+      }}
+    />
   );
 };
 

@@ -33,7 +33,7 @@ const Skills = () => {
                 >
                   <TechIcon
                     tech={skill.name}
-                    delayMs={index * 90}
+                    delayMs={index * 230}
                     isColored={hasRevealedColors}
                     className="text-3xl xs:text-5xl"
                   />
