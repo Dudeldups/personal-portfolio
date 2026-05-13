@@ -10,7 +10,7 @@ const HomePage = () => {
     <div className="mx-auto flex min-h-screen max-w-page flex-col items-start justify-center lg:flex-row">
       <Header />
 
-      <div>
+      <div className="w-full">
         <main>
           <Intro />
           <Skills />

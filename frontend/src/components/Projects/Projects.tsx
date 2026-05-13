@@ -14,7 +14,7 @@ const Projects = () => {
           <p>{t("projects.desc")}</p>
         </hgroup>
 
-        <ul className="mt-12 grid gap-8">
+        <ul className="mt-12 grid justify-items-center gap-8">
           {projects.map((project) => {
             const titleString = `projects.${project.id}.title`;
             const descString = `projects.${project.id}.desc`;
@@ -22,7 +22,7 @@ const Projects = () => {
             return (
               <li
                 key={project.id}
-                className="rounded-3xl border border-light/10 bg-light/6 p-4 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-md sm:p-8 md:p-6"
+                className="max-w-2xl rounded-3xl border border-light/10 bg-light/6 p-4 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-md sm:p-8 md:p-6"
               >
                 <div className="flex flex-col items-center gap-7 lg:items-start">
                   <hgroup className="text-center max-lg:max-w-md lg:text-left">
@@ -46,7 +46,7 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <picture className="mt-8 block overflow-hidden rounded-2xl border border-white/10">
+                <picture className="mx-auto mt-8 block max-w-xl overflow-hidden rounded-2xl border border-white/10">
                   <img
                     src={`/assets/images/project-previews/${project.image}`}
                     alt={`Preview of the ${project.title} website`}
