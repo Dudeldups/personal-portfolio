@@ -75,7 +75,7 @@
     @apply text-4xl text-primary capitalize md:text-5xl;
 
     & + p {
-      @apply mt-6 md:mt-8;
+      @apply mt-6 text-pretty md:mt-8;
     }
   }
 
