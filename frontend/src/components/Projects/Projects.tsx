@@ -22,7 +22,7 @@ const Projects = () => {
             return (
               <li
                 key={project.id}
-                className="max-w-2xl rounded-3xl border border-light/10 bg-light/6 p-4 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-md sm:p-8 md:p-6"
+                className="max-w-2xl rounded-3xl border border-light/10 bg-dark/50 p-4 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-md sm:p-6"
               >
                 <div className="flex flex-col items-center gap-7 lg:items-start">
                   <hgroup className="text-center max-lg:max-w-md lg:text-left">
