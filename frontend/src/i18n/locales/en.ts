@@ -34,7 +34,7 @@ export const en = {
       title: "Projects",
       desc: "Here are some of the projects I've worked on. You can visit the live demo or view the repository on GitHub.",
       liveButton: "Preview",
-      githubButton: "GitHub Repo",
+      githubButton: "Repository",
       bat: {
         title: "Big Ambitions Tools",
         desc: "A companion app for the game Big Ambitions, designed to help players plan, optimize, and manage their factory setups and logistics.",
