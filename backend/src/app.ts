@@ -1,15 +1,12 @@
 import express from "express";
+import githubRouter from "./routes/github";
+import healthRouter from "./routes/health";
 
 const app = express();
 
 app.use(express.json());
-
-app.get("/health", (_req, res) => {
-  res.json({
-    ok: true,
-    service: "personal-portfolio-backend",
-  });
-});
+app.use("/health", healthRouter);
+app.use("/api/github", githubRouter);
 
 app.get("/", (_req, res) => {
   res.json({
