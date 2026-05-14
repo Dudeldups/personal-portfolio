@@ -9,6 +9,7 @@ export const en = {
       home: "Home",
       about: "About me",
       projects: "Projects",
+      updates: "Now",
       contact: "Contact",
     },
     intro: {
@@ -50,6 +51,29 @@ export const en = {
       maker: {
         title: "Maker Landing Page",
         desc: "A landing page for a fictional product",
+      },
+    },
+    updates: {
+      title: "What I'm up to",
+      desc: "A quick snapshot of the latest code I shipped and the music that was with me while building.",
+      loading: "Loading latest activity...",
+      github: {
+        title: "GitHub",
+        subtitle: "Latest commit",
+        link: "View commit",
+      },
+      spotify: {
+        title: "Spotify",
+        subtitle: "Last played track",
+        link: "Open in Spotify",
+        profileLink: "Open Spotify profile",
+        nowPlaying: "Playing right now",
+        recentlyPlayed: "Recently played",
+      },
+      errors: {
+        "missing-config": "This feed is not configured yet.",
+        "request-failed": "The latest activity could not be loaded right now.",
+        null: "The latest activity could not be loaded right now.",
       },
     },
     contact: {
