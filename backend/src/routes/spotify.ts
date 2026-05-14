@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   exchangeSpotifyCodeForTokens,
+  getSpotifyRecentTrack,
   getSpotifyAuthorizeUrl,
 } from "../features/spotify/auth";
 
@@ -37,6 +38,31 @@ spotifyRouter.get("/callback", async (req, res) => {
 
     res.status(502).json({
       message: "Failed to complete Spotify authorization",
+      details:
+        error instanceof Error && process.env.NODE_ENV !== "production"
+          ? error.message
+          : undefined,
+    });
+  }
+});
+
+spotifyRouter.get("/recent-track", async (_req, res) => {
+  try {
+    const recentTrack = await getSpotifyRecentTrack();
+
+    if (!recentTrack) {
+      res.status(404).json({
+        message: "No recently played Spotify track found",
+      });
+      return;
+    }
+
+    res.json(recentTrack);
+  } catch (error) {
+    console.error(error);
+
+    res.status(502).json({
+      message: "Failed to load recent Spotify track",
       details:
         error instanceof Error && process.env.NODE_ENV !== "production"
           ? error.message
