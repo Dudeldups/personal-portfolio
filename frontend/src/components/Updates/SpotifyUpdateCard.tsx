@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FiClock, FiMusic } from "react-icons/fi";
+import { FiClock } from "react-icons/fi";
+import { FaSpotify } from "react-icons/fa6";
 import { getRecentSpotifyTrack } from "../../api/spotify";
 import {
   formatDate,
@@ -50,7 +51,7 @@ const SpotifyUpdateCard = () => {
     <article className="flex h-full flex-col rounded-3xl border border-light/10 bg-dark/50 p-6 shadow-sm shadow-dark-light backdrop-blur-md">
       <div className="flex items-start gap-3">
         <div className="rounded-full border border-light/12 bg-light/10 p-3">
-          <FiMusic className="size-5 text-accent" />
+          <FaSpotify className="size-5 text-accent" />
         </div>
         <div>
           <p className="text-sm font-bold tracking-[0.2em] text-accent/80 uppercase">
