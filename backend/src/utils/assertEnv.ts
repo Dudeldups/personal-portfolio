@@ -54,3 +54,4 @@ export const SPOTIFY_CLIENT_SECRET = assertEnv("SPOTIFY_CLIENT_SECRET");
 export const SPOTIFY_REDIRECT_URI =
   process.env.SPOTIFY_REDIRECT_URI?.trim() ||
   `http://127.0.0.1:${PORT}/api/spotify/callback`;
+export const SPOTIFY_REFRESH_TOKEN = assertEnv("SPOTIFY_REFRESH_TOKEN");
