@@ -24,5 +24,28 @@ function parsePort(value: string | undefined): number {
   return port;
 }
 
+function parsePositiveInteger(
+  value: string | undefined,
+  fallback: number,
+  name: string,
+): number {
+  if (!value) {
+    return fallback;
+  }
+
+  const parsedValue = Number(value);
+
+  if (!Number.isInteger(parsedValue) || parsedValue <= 0) {
+    throw new Error(`${name} must be a positive integer`);
+  }
+
+  return parsedValue;
+}
+
 export const PORT = parsePort(process.env.PORT);
+export const GITHUB_CACHE_TTL_MS = parsePositiveInteger(
+  process.env.GITHUB_CACHE_TTL_MS,
+  60_000,
+  "GITHUB_CACHE_TTL_MS",
+);
 export const GITHUB_ACCESS_TOKEN = assertEnv("GITHUB_ACCESS_TOKEN");
