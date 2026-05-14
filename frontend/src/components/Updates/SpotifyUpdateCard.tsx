@@ -79,25 +79,31 @@ const SpotifyUpdateCard = () => {
               </p>
             ) : null}
 
-            <div className="mt-6 flex items-center gap-2 text-sm text-light/70">
-              <FiClock className="size-4" />
-              <span>
-                {latestTrack.data.isPlaying
-                  ? t("updates.spotify.nowPlaying")
-                  : latestTrack.data.playedAt
-                    ? formatDate(latestTrack.data.playedAt, i18n.language)
-                    : t("updates.spotify.recentlyPlayed")}
-              </span>
-            </div>
+            <footer className="mt-auto pt-8">
+              <div className="flex items-center gap-2 text-sm text-light/70">
+                <FiClock className="size-4" />
+                <time
+                  dateTime={
+                    latestTrack.data.playedAt ?? new Date().toISOString()
+                  }
+                >
+                  {latestTrack.data.isPlaying
+                    ? t("updates.spotify.nowPlaying")
+                    : latestTrack.data.playedAt
+                      ? formatDate(latestTrack.data.playedAt, i18n.language)
+                      : t("updates.spotify.recentlyPlayed")}
+                </time>
+              </div>
 
-            <a
-              href={latestTrack.data.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-auto pt-8 text-sm font-bold text-primary underline decoration-transparent underline-offset-4 transition hover:decoration-primary"
-            >
-              {t("updates.spotify.link")}
-            </a>
+              <a
+                href={latestTrack.data.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex text-sm font-bold text-primary underline decoration-transparent underline-offset-4 transition hover:decoration-primary"
+              >
+                {t("updates.spotify.link")}
+              </a>
+            </footer>
           </div>
         ) : (
           <p>{getErrorMessage(t, latestTrack.error)}</p>

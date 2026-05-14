@@ -85,21 +85,23 @@ const GithubUpdateCard = () => {
                   {`${latestCommit.data.repo} | ${latestCommit.data.sha}`}
                 </p>
 
-                <div className="mt-6 flex items-center gap-2 text-sm text-light/70">
-                  <FiClock className="size-4" />
-                  <span>
-                    {formatDate(latestCommit.data.committedAt, i18n.language)}
-                  </span>
-                </div>
+                <footer className="mt-auto pt-8">
+                  <div className="flex items-center gap-2 text-sm text-light/70">
+                    <FiClock className="size-4" />
+                    <time dateTime={latestCommit.data.committedAt}>
+                      {formatDate(latestCommit.data.committedAt, i18n.language)}
+                    </time>
+                  </div>
 
-                <a
-                  href={latestCommit.data.url ?? "#"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-auto pt-8 text-sm font-bold text-primary underline decoration-transparent underline-offset-4 transition hover:decoration-primary"
-                >
-                  {t("updates.github.link")}
-                </a>
+                  <a
+                    href={latestCommit.data.url ?? "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex text-sm font-bold text-primary underline decoration-transparent underline-offset-4 transition hover:decoration-primary"
+                  >
+                    {t("updates.github.link")}
+                  </a>
+                </footer>
               </>
             )}
           </div>
