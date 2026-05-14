@@ -1,4 +1,5 @@
 import {
+  SPOTIFY_CACHE_TTL_MS,
   SPOTIFY_CLIENT_ID,
   SPOTIFY_CLIENT_SECRET,
   SPOTIFY_REFRESH_TOKEN,
@@ -45,6 +46,14 @@ export type SpotifyRecentTrack = {
   playedAt?: string;
   isPlaying: false;
 };
+
+type SpotifyRecentTrackCache = {
+  value: SpotifyRecentTrack | null;
+  expiresAt: number;
+};
+
+let spotifyRecentTrackCache: SpotifyRecentTrackCache | null = null;
+let inFlightRecentTrackRequest: Promise<SpotifyRecentTrack | null> | null = null;
 
 function createSpotifyBasicAuthHeader(): string {
   const credentials = `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`;
@@ -117,7 +126,7 @@ export async function refreshSpotifyAccessToken(): Promise<string> {
   return payload.access_token;
 }
 
-export async function getSpotifyRecentTrack(): Promise<SpotifyRecentTrack | null> {
+async function fetchSpotifyRecentTrack(): Promise<SpotifyRecentTrack | null> {
   const accessToken = await refreshSpotifyAccessToken();
 
   const response = await fetch(
@@ -166,3 +175,61 @@ export async function getSpotifyRecentTrack(): Promise<SpotifyRecentTrack | null
     isPlaying: false,
   };
 }
+
+function cacheSpotifyRecentTrack(
+  recentTrack: SpotifyRecentTrack | null,
+): SpotifyRecentTrack | null {
+  spotifyRecentTrackCache = {
+    value: recentTrack,
+    expiresAt: Date.now() + SPOTIFY_CACHE_TTL_MS,
+  };
+
+  return recentTrack;
+}
+
+function startRecentTrackRefresh(): Promise<SpotifyRecentTrack | null> {
+  if (inFlightRecentTrackRequest) {
+    return inFlightRecentTrackRequest;
+  }
+
+  inFlightRecentTrackRequest = fetchSpotifyRecentTrack()
+    .then(cacheSpotifyRecentTrack)
+    .finally(() => {
+      inFlightRecentTrackRequest = null;
+    });
+
+  return inFlightRecentTrackRequest;
+}
+
+function refreshRecentTrackInBackground(): void {
+  void startRecentTrackRefresh().catch((error) => {
+    console.error("Failed to refresh Spotify recent track in background", error);
+  });
+}
+
+export async function getSpotifyRecentTrack(): Promise<SpotifyRecentTrack | null> {
+  const now = Date.now();
+
+  if (spotifyRecentTrackCache) {
+    if (spotifyRecentTrackCache.expiresAt > now) {
+      return spotifyRecentTrackCache.value;
+    }
+
+    refreshRecentTrackInBackground();
+    return spotifyRecentTrackCache.value;
+  }
+
+  if (inFlightRecentTrackRequest) {
+    return inFlightRecentTrackRequest;
+  }
+
+  return startRecentTrackRefresh();
+}
+
+void (async () => {
+  try {
+    await getSpotifyRecentTrack();
+  } catch (error) {
+    console.error("Failed to warm Spotify recent track cache on startup", error);
+  }
+})();
