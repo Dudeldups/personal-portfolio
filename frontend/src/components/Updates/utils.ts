@@ -2,10 +2,11 @@ import type { TFunction } from "i18next";
 
 export type GitHubCommit = {
   message: string;
-  url: string;
+  url: string | null;
   repo: string;
   committedAt: string;
   sha: string;
+  isPrivate: boolean;
 };
 
 export type SpotifyTrack = {
