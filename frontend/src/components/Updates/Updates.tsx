@@ -15,7 +15,7 @@ const Updates = () => {
           <p>{t("updates.desc")}</p>
         </hgroup>
 
-        <div className="grid justify-items-center gap-6 *:max-w-xs lg:grid-cols-2">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,15.5rem),1fr))] gap-6 *:w-full">
           <GithubUpdateCard />
           <SpotifyUpdateCard />
         </div>
