@@ -11,53 +11,44 @@ import {
 } from "./utils";
 
 const parseGitHubCommit = (payload: unknown): GitHubCommit | null => {
-  if (!Array.isArray(payload) || payload.length === 0) {
-    return null;
-  }
-
-  const [firstCommit] = payload;
-
   if (
-    !firstCommit ||
-    typeof firstCommit !== "object" ||
-    !("commit" in firstCommit) ||
-    !("html_url" in firstCommit) ||
-    !("sha" in firstCommit)
+    !payload ||
+    typeof payload !== "object" ||
+    !("message" in payload) ||
+    !("repo" in payload) ||
+    !("committedAt" in payload) ||
+    !("sha" in payload) ||
+    !("isPrivate" in payload)
   ) {
     return null;
   }
 
-  const commit = firstCommit.commit;
+  const commit = payload as {
+    message?: string;
+    repo?: string;
+    committedAt?: string;
+    sha?: string;
+    url?: string | null;
+    isPrivate?: boolean;
+  };
 
   if (
-    !commit ||
-    typeof commit !== "object" ||
-    !("message" in commit) ||
-    !("committer" in commit)
-  ) {
-    return null;
-  }
-
-  const committer = commit.committer;
-
-  if (
-    !committer ||
-    typeof committer !== "object" ||
-    !("date" in committer) ||
     typeof commit.message !== "string" ||
-    typeof firstCommit.html_url !== "string" ||
-    typeof firstCommit.sha !== "string" ||
-    typeof committer.date !== "string"
+    typeof commit.repo !== "string" ||
+    typeof commit.committedAt !== "string" ||
+    typeof commit.sha !== "string" ||
+    typeof commit.isPrivate !== "boolean"
   ) {
     return null;
   }
 
   return {
-    message: commit.message.split("\n")[0],
-    url: firstCommit.html_url,
-    repo: `${siteConfig.githubOwner}/${siteConfig.githubRepo}`,
-    committedAt: committer.date,
-    sha: firstCommit.sha.slice(0, 7),
+    message: commit.message,
+    url: typeof commit.url === "string" ? commit.url : null,
+    repo: commit.repo,
+    committedAt: commit.committedAt,
+    sha: commit.sha,
+    isPrivate: commit.isPrivate,
   };
 };
 
@@ -71,7 +62,7 @@ const GithubUpdateCard = () => {
     const controller = new AbortController();
 
     async function loadGitHubCommit() {
-      if (!siteConfig.githubOwner || !siteConfig.githubRepo) {
+      if (!siteConfig.githubRecentCommitEndpoint) {
         setLatestCommit({
           data: null,
           isLoading: false,
@@ -81,15 +72,9 @@ const GithubUpdateCard = () => {
       }
 
       try {
-        const response = await fetch(
-          `https://api.github.com/repos/${siteConfig.githubOwner}/${siteConfig.githubRepo}/commits?per_page=1`,
-          {
-            signal: controller.signal,
-            headers: {
-              Accept: "application/vnd.github+json",
-            },
-          },
-        );
+        const response = await fetch(siteConfig.githubRecentCommitEndpoint, {
+          signal: controller.signal,
+        });
 
         if (!response.ok) {
           throw new Error(`GitHub request failed with ${response.status}`);
@@ -148,7 +133,9 @@ const GithubUpdateCard = () => {
               {latestCommit.data.message}
             </p>
             <p className="mt-3 text-sm text-light/70">
-              {latestCommit.data.repo} | {latestCommit.data.sha}
+              {latestCommit.data.isPrivate
+                ? latestCommit.data.repo
+                : `${latestCommit.data.repo} | ${latestCommit.data.sha}`}
             </p>
 
             <div className="mt-6 flex items-center gap-2 text-sm text-light/70">
@@ -158,14 +145,20 @@ const GithubUpdateCard = () => {
               </span>
             </div>
 
-            <a
-              href={latestCommit.data.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-auto pt-8 text-sm font-bold text-accent underline decoration-transparent underline-offset-4 transition hover:decoration-accent"
-            >
-              {t("updates.github.link")}
-            </a>
+            {latestCommit.data.url ? (
+              <a
+                href={latestCommit.data.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-auto pt-8 text-sm font-bold text-accent underline decoration-transparent underline-offset-4 transition hover:decoration-accent"
+              >
+                {t("updates.github.link")}
+              </a>
+            ) : (
+              <p className="mt-auto pt-8 text-sm font-bold text-light/70">
+                {t("updates.github.privateRepo")}
+              </p>
+            )}
           </div>
         ) : (
           <p>{getErrorMessage(t, latestCommit.error)}</p>
