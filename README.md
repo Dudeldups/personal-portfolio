@@ -2,12 +2,11 @@
 
 Personal portfolio website with a React frontend and an Express backend.
 
-The backend powers the activity section:
-
-- latest GitHub commit
-- most recently played Spotify track
-
-In production, the Express app serves both the API and the built frontend from a single container.
+- Responsive portfolio UI
+- GitHub activity integration
+- Spotify now-playing integration
+- Dockerized deployment
+- Shared TypeScript setup
 
 ## Tech Stack
 
@@ -15,15 +14,13 @@ In production, the Express app serves both the API and the built frontend from a
 - Backend: Express, TypeScript
 - Tooling: npm workspaces, Docker Compose
 
-## Project Structure
+## Live Demo
 
-```text
-.
-├─ frontend/   # React app
-├─ backend/    # Express API and production static file server
-├─ docker-compose.yml
-└─ package.json
-```
+<https://dudeldups.dev>
+
+## Preview
+
+![Portfolio Preview](./preview.png)
 
 ## Requirements
 
@@ -33,7 +30,7 @@ In production, the Express app serves both the API and the built frontend from a
 
 ## Environment Files
 
-Create these files before running the app:
+Create the following environment files:
 
 - `frontend/.env`
 - `backend/.env`
