@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FiClock, FiMusic } from "react-icons/fi";
-import { siteConfig } from "../../config/site";
+import { getRecentSpotifyTrack } from "../../api/spotify";
 import {
   formatDate,
   getErrorMessage,
@@ -9,80 +9,6 @@ import {
   type AsyncState,
   type SpotifyTrack,
 } from "./utils";
-
-const parseSpotifyTrack = (payload: unknown): SpotifyTrack | null => {
-  if (!payload || typeof payload !== "object") {
-    return null;
-  }
-
-  if ("item" in payload) {
-    const spotifyPayload = payload as {
-      item?: {
-        name?: string;
-        artists?: { name?: string }[];
-        album?: { name?: string };
-        external_urls?: { spotify?: string };
-      };
-      played_at?: string;
-      is_playing?: boolean;
-    };
-
-    const track = spotifyPayload.item;
-
-    if (
-      !track?.name ||
-      !track.external_urls?.spotify ||
-      !Array.isArray(track.artists)
-    ) {
-      return null;
-    }
-
-    return {
-      title: track.name,
-      artists: track.artists
-        .map((artist) => artist.name)
-        .filter(Boolean)
-        .join(", "),
-      album: track.album?.name,
-      url: track.external_urls.spotify,
-      playedAt: spotifyPayload.played_at,
-      isPlaying: spotifyPayload.is_playing,
-    };
-  }
-
-  const genericPayload = payload as {
-    title?: string;
-    name?: string;
-    artists?: string | string[];
-    artist?: string;
-    album?: string;
-    url?: string;
-    trackUrl?: string;
-    playedAt?: string;
-    played_at?: string;
-    isPlaying?: boolean;
-    is_playing?: boolean;
-  };
-
-  const title = genericPayload.title ?? genericPayload.name;
-  const artists = Array.isArray(genericPayload.artists)
-    ? genericPayload.artists.join(", ")
-    : (genericPayload.artists ?? genericPayload.artist);
-  const url = genericPayload.url ?? genericPayload.trackUrl;
-
-  if (!title || !artists || !url) {
-    return null;
-  }
-
-  return {
-    title,
-    artists,
-    album: genericPayload.album,
-    url,
-    playedAt: genericPayload.playedAt ?? genericPayload.played_at,
-    isPlaying: genericPayload.isPlaying ?? genericPayload.is_playing,
-  };
-};
 
 const SpotifyUpdateCard = () => {
   const { t, i18n } = useTranslation();
@@ -94,30 +20,8 @@ const SpotifyUpdateCard = () => {
     const controller = new AbortController();
 
     async function loadSpotifyTrack() {
-      if (!siteConfig.spotifyRecentTrackEndpoint) {
-        setLatestTrack({
-          data: null,
-          isLoading: false,
-          error: "missing-config",
-        });
-        return;
-      }
-
       try {
-        const response = await fetch(siteConfig.spotifyRecentTrackEndpoint, {
-          signal: controller.signal,
-        });
-
-        if (!response.ok) {
-          throw new Error(`Spotify request failed with ${response.status}`);
-        }
-
-        const payload = (await response.json()) as unknown;
-        const parsedTrack = parseSpotifyTrack(payload);
-
-        if (!parsedTrack) {
-          throw new Error("Spotify response format is invalid");
-        }
+        const parsedTrack = await getRecentSpotifyTrack(controller.signal);
 
         setLatestTrack({
           data: parsedTrack,
@@ -195,19 +99,7 @@ const SpotifyUpdateCard = () => {
             </a>
           </div>
         ) : (
-          <div className="space-y-4">
-            <p>{getErrorMessage(t, latestTrack.error)}</p>
-            {siteConfig.spotifyProfileUrl ? (
-              <a
-                href={siteConfig.spotifyProfileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex text-sm font-bold text-primary underline decoration-transparent underline-offset-4 transition hover:decoration-primary"
-              >
-                {t("updates.spotify.profileLink")}
-              </a>
-            ) : null}
-          </div>
+          <p>{getErrorMessage(t, latestTrack.error)}</p>
         )}
       </div>
     </article>
