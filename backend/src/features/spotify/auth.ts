@@ -1,10 +1,12 @@
 import {
   SPOTIFY_CLIENT_ID,
   SPOTIFY_CLIENT_SECRET,
+  SPOTIFY_REFRESH_TOKEN,
   SPOTIFY_REDIRECT_URI,
 } from "../../utils/assertEnv";
 
 const SPOTIFY_ACCOUNTS_BASE_URL = "https://accounts.spotify.com";
+const SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1";
 const SPOTIFY_RECENTLY_PLAYED_SCOPE = "user-read-recently-played";
 
 type SpotifyTokenResponse = {
@@ -15,6 +17,33 @@ type SpotifyTokenResponse = {
   refresh_token?: string;
   error?: string;
   error_description?: string;
+};
+
+type SpotifyRecentTrackResponse = {
+  items?: Array<{
+    track?: {
+      name?: string;
+      album?: {
+        name?: string;
+      };
+      artists?: Array<{
+        name?: string;
+      }>;
+      external_urls?: {
+        spotify?: string;
+      };
+    };
+    played_at?: string;
+  }>;
+};
+
+export type SpotifyRecentTrack = {
+  title: string;
+  artists: string;
+  album?: string;
+  url: string;
+  playedAt?: string;
+  isPlaying: false;
 };
 
 function createSpotifyBasicAuthHeader(): string {
@@ -60,4 +89,80 @@ export async function exchangeSpotifyCodeForTokens(
   }
 
   return payload;
+}
+
+export async function refreshSpotifyAccessToken(): Promise<string> {
+  const response = await fetch(`${SPOTIFY_ACCOUNTS_BASE_URL}/api/token`, {
+    method: "POST",
+    headers: {
+      Authorization: createSpotifyBasicAuthHeader(),
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: SPOTIFY_REFRESH_TOKEN,
+    }),
+  });
+
+  const payload = (await response.json()) as SpotifyTokenResponse;
+
+  if (!response.ok || !payload.access_token) {
+    throw new Error(
+      `Spotify token refresh failed with ${response.status}: ${
+        payload.error_description ?? payload.error ?? "Unknown error"
+      }`,
+    );
+  }
+
+  return payload.access_token;
+}
+
+export async function getSpotifyRecentTrack(): Promise<SpotifyRecentTrack | null> {
+  const accessToken = await refreshSpotifyAccessToken();
+
+  const response = await fetch(
+    `${SPOTIFY_API_BASE_URL}/me/player/recently-played?limit=1`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  const payload = (await response.json()) as SpotifyRecentTrackResponse & {
+    error?: {
+      message?: string;
+    };
+  };
+
+  if (!response.ok) {
+    throw new Error(
+      `Spotify recent track request failed with ${response.status}: ${
+        payload.error?.message ?? "Unknown error"
+      }`,
+    );
+  }
+
+  const [item] = payload.items ?? [];
+  const track = item?.track;
+
+  if (
+    !track?.name ||
+    !track.external_urls?.spotify ||
+    !Array.isArray(track.artists)
+  ) {
+    return null;
+  }
+
+  return {
+    title: track.name,
+    artists: track.artists
+      .map((artist) => artist.name)
+      .filter(Boolean)
+      .join(", "),
+    album: track.album?.name,
+    url: track.external_urls.spotify,
+    playedAt: item?.played_at,
+    isPlaying: false,
+  };
 }
