@@ -19,10 +19,14 @@ const Navbar = () => {
   const { t } = useTranslation();
   const aboutRef = useRefStore((state) => state.refs["about"]);
   const projectsRef = useRefStore((state) => state.refs["projects"]);
+  const updatesRef = useRefStore((state) => state.refs["updates"]);
   const contactRef = useRefStore((state) => state.refs["contact"]);
 
   const isAboutInView = useInView(aboutRef ?? { current: null });
   const isProjectsInView = useInView(projectsRef ?? { current: null }, {
+    margin: "-50% 0px 0px 0px",
+  });
+  const isUpdatesInView = useInView(updatesRef ?? { current: null }, {
     margin: "-50% 0px 0px 0px",
   });
   const isContactInView = useInView(contactRef ?? { current: null }, {
@@ -33,6 +37,8 @@ const Navbar = () => {
     ? "about"
     : isContactInView
       ? "contact"
+      : isUpdatesInView
+        ? "updates"
       : isProjectsInView
         ? "projects"
         : "";
@@ -59,6 +65,16 @@ const Navbar = () => {
             className={`h-0.5`}
           />
           <a href="#projects">{t("nav.projects")}</a>
+        </li>
+        <li className="flex items-center gap-5">
+          <motion.span
+            initial="initial"
+            animate={currentView === "updates" ? "visible" : "initial"}
+            variants={spanVariants}
+            transition={{ duration: 0.3 }}
+            className={`h-0.5`}
+          />
+          <a href="#updates">{t("nav.updates")}</a>
         </li>
         <li className="flex items-center gap-5">
           <motion.span
