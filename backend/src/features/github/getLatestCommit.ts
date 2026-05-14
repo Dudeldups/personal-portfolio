@@ -10,7 +10,6 @@ type GitHubUserResponse = {
 type GitHubRepo = {
   full_name?: string;
   private?: boolean;
-  pushed_at?: string;
   owner?: {
     login?: string;
   };
@@ -190,45 +189,52 @@ async function findLatestCommitFromRepositories(
     "https://api.github.com/user/repos?sort=pushed&per_page=100",
   );
 
-  let latestCommit: LatestGitHubCommit | null = null;
-
-  for (const repo of repositories.slice(0, 25)) {
+  const candidatePromises = repositories.slice(0, 25).map(async (repo) => {
     const owner = repo.owner?.login;
     const repoName = repo.name;
 
     if (!owner || !repoName) {
-      continue;
+      return null;
     }
 
     try {
       const commits = await fetchJson<GitHubRepoCommit[]>(
-        `https://api.github.com/repos/${owner}/${repoName}/commits?author=${username}&per_page=5`,
+        `https://api.github.com/repos/${owner}/${repoName}/commits?author=${username}&per_page=1`,
       );
 
-      const candidate = commits
-        .map((commit) => normalizeRepoCommit(repo, commit))
-        .find((commit) => commit !== null);
+      const [latestRepoCommit] = commits;
 
-      if (!candidate) {
-        continue;
+      if (!latestRepoCommit) {
+        return null;
       }
 
-      if (
-        !latestCommit ||
-        new Date(candidate.committedAt).getTime() >
-          new Date(latestCommit.committedAt).getTime()
-      ) {
-        latestCommit = candidate;
-      }
+      return normalizeRepoCommit(repo, latestRepoCommit);
     } catch (error) {
       console.warn(
         `Skipping repository ${owner}/${repoName} while scanning commits`,
         error,
       );
+      return null;
     }
-  }
+  });
 
-  return latestCommit;
+  const candidates = await Promise.all(candidatePromises);
+
+  return candidates.reduce<LatestGitHubCommit | null>((latestCommit, candidate) => {
+    if (!candidate) {
+      return latestCommit;
+    }
+
+    if (
+      !latestCommit ||
+      new Date(candidate.committedAt).getTime() >
+        new Date(latestCommit.committedAt).getTime()
+    ) {
+      return candidate;
+    }
+
+    return latestCommit;
+  }, null);
 }
 
 async function fetchLatestCommit(): Promise<LatestGitHubCommit> {
