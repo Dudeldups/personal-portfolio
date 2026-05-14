@@ -65,35 +65,42 @@ const GithubUpdateCard = () => {
           <p>{t("updates.loading")}</p>
         ) : latestCommit.data ? (
           <div className="flex flex-1 flex-col">
-            <p className="text-xl font-bold text-white">
-              {latestCommit.data.message}
-            </p>
-            <p className="mt-3 text-sm text-light/70">
-              {latestCommit.data.isPrivate
-                ? latestCommit.data.repo
-                : `${latestCommit.data.repo} | ${latestCommit.data.sha}`}
-            </p>
-
-            <div className="mt-6 flex items-center gap-2 text-sm text-light/70">
-              <FiClock className="size-4" />
-              <span>
-                {formatDate(latestCommit.data.committedAt, i18n.language)}
-              </span>
-            </div>
-
-            {latestCommit.data.url ? (
-              <a
-                href={latestCommit.data.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-auto pt-8 text-sm font-bold text-primary underline decoration-transparent underline-offset-4 transition hover:decoration-primary"
-              >
-                {t("updates.github.link")}
-              </a>
+            {latestCommit.data.isPrivate ? (
+              <div className="mt-auto">
+                <p className="text-sm font-bold text-light/70">
+                  {t("updates.github.privateRepo")}
+                </p>
+                <img
+                  src="/assets/images/alright_then_keep_your_secrets_meme.webp"
+                  alt={t("updates.github.privateRepoImageAlt")}
+                  className="mx-auto mt-5 w-full max-w-xs rounded-2xl border border-light/10"
+                />
+              </div>
             ) : (
-              <p className="mt-auto pt-8 text-sm font-bold text-light/70">
-                {t("updates.github.privateRepo")}
-              </p>
+              <>
+                <p className="text-xl font-bold text-white">
+                  {latestCommit.data.message}
+                </p>
+                <p className="mt-3 text-sm text-light/70">
+                  {`${latestCommit.data.repo} | ${latestCommit.data.sha}`}
+                </p>
+
+                <div className="mt-6 flex items-center gap-2 text-sm text-light/70">
+                  <FiClock className="size-4" />
+                  <span>
+                    {formatDate(latestCommit.data.committedAt, i18n.language)}
+                  </span>
+                </div>
+
+                <a
+                  href={latestCommit.data.url ?? "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-auto pt-8 text-sm font-bold text-primary underline decoration-transparent underline-offset-4 transition hover:decoration-primary"
+                >
+                  {t("updates.github.link")}
+                </a>
+              </>
             )}
           </div>
         ) : (
