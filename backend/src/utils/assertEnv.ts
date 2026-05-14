@@ -26,6 +26,3 @@ function parsePort(value: string | undefined): number {
 
 export const PORT = parsePort(process.env.PORT);
 export const GITHUB_ACCESS_TOKEN = assertEnv("GITHUB_ACCESS_TOKEN");
-export const SPOTIFY_CLIENT_ID = assertEnv("SPOTIFY_CLIENT_ID");
-export const SPOTIFY_CLIENT_SECRET = assertEnv("SPOTIFY_CLIENT_SECRET");
-export const SPOTIFY_REFRESH_TOKEN = assertEnv("SPOTIFY_REFRESH_TOKEN");
