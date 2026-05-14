@@ -43,46 +43,44 @@ export type LatestGitHubCommit = {
   isPrivate: boolean;
 };
 
+type LatestCommitCache = {
+  value: LatestGitHubCommit;
+  expiresAt: number;
+};
+
 const GITHUB_API_HEADERS = {
   Accept: "application/vnd.github+json",
   Authorization: `Bearer ${GITHUB_ACCESS_TOKEN}`,
   "X-GitHub-Api-Version": "2022-11-28",
 };
 
-let latestCommitCache:
-  | {
-      value: LatestGitHubCommit;
-      expiresAt: number;
-    }
-  | null = null;
+const GITHUB_API_BASE_URL = "https://api.github.com";
+const GITHUB_WEB_BASE_URL = "https://github.com";
+const MAX_EVENT_PAGES = 5;
+const REPOSITORY_SCAN_LIMIT = 25;
+
+let latestCommitCache: LatestCommitCache | null = null;
 
 let inFlightLatestCommitRequest: Promise<LatestGitHubCommit> | null = null;
 
-function updateLatestCommitCache(
-  latestCommit: LatestGitHubCommit,
-): LatestGitHubCommit {
+function getTimestamp(value: string): number {
+  return new Date(value).getTime();
+}
+
+function isNewerCommit(
+  candidate: LatestGitHubCommit,
+  latestCommit: LatestGitHubCommit | null,
+): boolean {
+  return !latestCommit || getTimestamp(candidate.committedAt) > getTimestamp(latestCommit.committedAt);
+}
+
+function cacheLatestCommit(latestCommit: LatestGitHubCommit): LatestGitHubCommit {
   latestCommitCache = {
     value: latestCommit,
     expiresAt: Date.now() + GITHUB_CACHE_TTL_MS,
   };
 
   return latestCommit;
-}
-
-function refreshLatestCommitInBackground(): void {
-  if (inFlightLatestCommitRequest) {
-    return;
-  }
-
-  inFlightLatestCommitRequest = fetchLatestCommit()
-    .then(updateLatestCommitCache)
-    .catch((error) => {
-      console.error("Failed to refresh latest GitHub commit in background", error);
-      return latestCommitCache?.value;
-    })
-    .finally(() => {
-      inFlightLatestCommitRequest = null;
-    }) as Promise<LatestGitHubCommit>;
 }
 
 async function fetchJson<T>(url: string): Promise<T> {
@@ -131,9 +129,7 @@ function getLatestCommitFromPushEvent(
     repo: isPrivate ? "Private Repo" : repoName,
     sha: matchingCommit.sha.slice(0, 7),
     committedAt: createdAt,
-    url: isPrivate
-      ? null
-      : `https://github.com/${repoName}/commit/${matchingCommit.sha}`,
+    url: isPrivate ? null : `${GITHUB_WEB_BASE_URL}/${repoName}/commit/${matchingCommit.sha}`,
     isPrivate,
   };
 }
@@ -182,14 +178,41 @@ function normalizeRepoCommit(
   };
 }
 
+async function findLatestCommitInEventFeed(
+  username: string,
+): Promise<LatestGitHubCommit | null> {
+  for (let page = 1; page <= MAX_EVENT_PAGES; page += 1) {
+    const events = await fetchJson<GitHubPushEvent[]>(
+      `${GITHUB_API_BASE_URL}/users/${username}/events?per_page=100&page=${page}`,
+    );
+
+    if (events.length === 0) {
+      return null;
+    }
+
+    const latestCommit = events
+      .filter(isPushEvent)
+      .map(getLatestCommitFromPushEvent)
+      .find((commit) => commit !== null);
+
+    if (latestCommit) {
+      return latestCommit;
+    }
+  }
+
+  return null;
+}
+
 async function findLatestCommitFromRepositories(
   username: string,
 ): Promise<LatestGitHubCommit | null> {
   const repositories = await fetchJson<GitHubRepo[]>(
-    "https://api.github.com/user/repos?sort=pushed&per_page=100",
+    `${GITHUB_API_BASE_URL}/user/repos?sort=pushed&per_page=100`,
   );
 
-  const candidatePromises = repositories.slice(0, 25).map(async (repo) => {
+  const candidatePromises = repositories
+    .slice(0, REPOSITORY_SCAN_LIMIT)
+    .map(async (repo) => {
     const owner = repo.owner?.login;
     const repoName = repo.name;
 
@@ -199,7 +222,7 @@ async function findLatestCommitFromRepositories(
 
     try {
       const commits = await fetchJson<GitHubRepoCommit[]>(
-        `https://api.github.com/repos/${owner}/${repoName}/commits?author=${username}&per_page=1`,
+        `${GITHUB_API_BASE_URL}/repos/${owner}/${repoName}/commits?author=${username}&per_page=1`,
       );
 
       const [latestRepoCommit] = commits;
@@ -220,49 +243,53 @@ async function findLatestCommitFromRepositories(
 
   const candidates = await Promise.all(candidatePromises);
 
-  return candidates.reduce<LatestGitHubCommit | null>((latestCommit, candidate) => {
-    if (!candidate) {
-      return latestCommit;
-    }
+  return candidates.reduce<LatestGitHubCommit | null>(
+    (latestCommit, candidate) => {
+      if (!candidate || !isNewerCommit(candidate, latestCommit)) {
+        return latestCommit;
+      }
 
-    if (
-      !latestCommit ||
-      new Date(candidate.committedAt).getTime() >
-        new Date(latestCommit.committedAt).getTime()
-    ) {
       return candidate;
-    }
+    },
+    null,
+  );
+}
 
-    return latestCommit;
-  }, null);
+function startCommitRefresh(): Promise<LatestGitHubCommit> {
+  if (inFlightLatestCommitRequest) {
+    return inFlightLatestCommitRequest;
+  }
+
+  inFlightLatestCommitRequest = fetchLatestCommit()
+    .then(cacheLatestCommit)
+    .finally(() => {
+      inFlightLatestCommitRequest = null;
+    });
+
+  return inFlightLatestCommitRequest;
+}
+
+function refreshLatestCommitInBackground(): void {
+  void startCommitRefresh().catch((error) => {
+    console.error("Failed to refresh latest GitHub commit in background", error);
+  });
 }
 
 async function fetchLatestCommit(): Promise<LatestGitHubCommit> {
   const currentUser = await fetchJson<GitHubUserResponse>(
-    "https://api.github.com/user",
+    `${GITHUB_API_BASE_URL}/user`,
   );
 
   if (!currentUser.login) {
     throw new Error("GitHub user response did not include a login");
   }
 
-  for (let page = 1; page <= 5; page += 1) {
-    const events = await fetchJson<GitHubPushEvent[]>(
-      `https://api.github.com/users/${currentUser.login}/events?per_page=100&page=${page}`,
-    );
+  const latestCommitFromEvents = await findLatestCommitInEventFeed(
+    currentUser.login,
+  );
 
-    if (events.length === 0) {
-      break;
-    }
-
-    const latestCommit = events
-      .filter(isPushEvent)
-      .map(getLatestCommitFromPushEvent)
-      .find((commit) => commit !== null);
-
-    if (latestCommit) {
-      return latestCommit;
-    }
+  if (latestCommitFromEvents) {
+    return latestCommitFromEvents;
   }
 
   const fallbackCommit = await findLatestCommitFromRepositories(
@@ -294,13 +321,7 @@ export async function getLatestCommit(): Promise<LatestGitHubCommit> {
     return inFlightLatestCommitRequest;
   }
 
-  inFlightLatestCommitRequest = fetchLatestCommit()
-    .then(updateLatestCommitCache)
-    .finally(() => {
-      inFlightLatestCommitRequest = null;
-    });
-
-  return inFlightLatestCommitRequest;
+  return startCommitRefresh();
 }
 
 void (async () => {
