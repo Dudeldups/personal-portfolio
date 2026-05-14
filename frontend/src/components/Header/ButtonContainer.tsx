@@ -17,10 +17,10 @@ const ButtonContainer = ({ isContactInView }: ButtonContainerProps) => {
       <li>
         <a
           href="mailto:hi@dudeldups.dev"
-          className={`flex size-12 items-center justify-center rounded-full border-2 border-light text-light transition-colors duration-300 ease-in-out hocus-visible:border-primary hocus-visible:text-primary`}
+          className={`flex size-12 items-center justify-center rounded-full bg-light text-darkest transition-colors duration-300 ease-in-out hocus-visible:border-primary hocus-visible:text-primary`}
           title="Email"
         >
-          <MdOutlineEmail className="text-xl" />
+          <MdOutlineEmail className="text-2xl" />
 
           <span className={`hidden`}>{t("contact.button")}</span>
         </a>
@@ -30,10 +30,10 @@ const ButtonContainer = ({ isContactInView }: ButtonContainerProps) => {
           target="_blank"
           rel="noopener noreferrer"
           href="https://linkedin.com/in/arne-jacob/"
-          className={`flex size-12 items-center justify-center rounded-full border-2 border-light text-light transition-colors duration-300 ease-in-out hocus-visible:border-primary hocus-visible:text-primary`}
+          className={`flex size-12 items-center justify-center rounded-full bg-light text-darkest transition-colors duration-300 ease-in-out hocus-visible:border-primary hocus-visible:text-primary`}
           title="LinkedIn"
         >
-          <FaLinkedin className="text-xl" />
+          <FaLinkedin className="text-2xl" />
           <span className={`hidden`}>LinkedIn</span>
         </a>
       </li>
@@ -42,10 +42,10 @@ const ButtonContainer = ({ isContactInView }: ButtonContainerProps) => {
           target="_blank"
           rel="noopener noreferrer"
           href="https://github.com/Dudeldups"
-          className={`flex size-12 items-center justify-center rounded-full border-2 border-light text-light transition-colors duration-300 ease-in-out hocus-visible:border-primary hocus-visible:text-primary`}
+          className={`flex size-12 items-center justify-center rounded-full bg-light text-darkest transition-colors duration-300 ease-in-out hocus-visible:border-primary hocus-visible:text-primary`}
           title="GitHub"
         >
-          <FaGithub className="text-xl" />
+          <FaGithub className="text-2xl" />
           <span className={`hidden`}>GitHub</span>
         </a>
       </li>
