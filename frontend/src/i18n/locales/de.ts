@@ -61,6 +61,7 @@ export const de = {
         title: "GitHub",
         subtitle: "Letzter Commit",
         link: "Commit ansehen",
+        privateRepo: "Dieser Commit wurde in einem privaten Repository gemacht.",
       },
       spotify: {
         title: "Spotify",
