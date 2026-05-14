@@ -49,3 +49,8 @@ export const GITHUB_CACHE_TTL_MS = parsePositiveInteger(
   "GITHUB_CACHE_TTL_MS",
 );
 export const GITHUB_ACCESS_TOKEN = assertEnv("GITHUB_ACCESS_TOKEN");
+export const SPOTIFY_CLIENT_ID = assertEnv("SPOTIFY_CLIENT_ID");
+export const SPOTIFY_CLIENT_SECRET = assertEnv("SPOTIFY_CLIENT_SECRET");
+export const SPOTIFY_REDIRECT_URI =
+  process.env.SPOTIFY_REDIRECT_URI?.trim() ||
+  `http://127.0.0.1:${PORT}/api/spotify/callback`;
