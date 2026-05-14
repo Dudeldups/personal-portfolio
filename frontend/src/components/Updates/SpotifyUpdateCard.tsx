@@ -47,7 +47,7 @@ const SpotifyUpdateCard = () => {
   }, []);
 
   return (
-    <article className="rounded-3xl border border-light/10 bg-dark/50 p-6 shadow-sm shadow-dark-light backdrop-blur-md">
+    <article className="flex h-full flex-col rounded-3xl border border-light/10 bg-dark/50 p-6 shadow-sm shadow-dark-light backdrop-blur-md">
       <div className="flex items-start gap-3">
         <div className="rounded-full border border-light/12 bg-light/10 p-3">
           <FiMusic className="size-5 text-accent" />
@@ -60,11 +60,11 @@ const SpotifyUpdateCard = () => {
         </div>
       </div>
 
-      <div className="mt-6 min-h-40">
+      <div className="mt-6 flex min-h-40 flex-1 flex-col">
         {latestTrack.isLoading ? (
           <p>{t("updates.loading")}</p>
         ) : latestTrack.data ? (
-          <div className="flex h-full flex-col">
+          <div className="flex flex-1 flex-col">
             <p className="text-xl font-bold text-white">
               {latestTrack.data.title}
             </p>
