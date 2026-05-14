@@ -48,7 +48,7 @@ const SpotifyUpdateCard = () => {
 
   return (
     <article className="rounded-3xl border border-light/10 bg-dark/50 p-6 shadow-sm shadow-dark-light backdrop-blur-md">
-      <div className="flex items-center gap-3">
+      <div className="flex items-start gap-3">
         <div className="rounded-full border border-light/12 bg-light/10 p-3">
           <FiMusic className="size-5 text-accent" />
         </div>
