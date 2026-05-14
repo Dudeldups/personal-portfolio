@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { FiClock, FiGithub } from "react-icons/fi";
 import { getLatestGithubCommit } from "../../api/github";
 import {
-  formatDate,
+  formatRelativeDate,
   getErrorMessage,
   initialState,
   type AsyncState,
@@ -89,7 +89,11 @@ const GithubUpdateCard = () => {
                   <div className="flex items-center gap-2 text-sm text-light/70">
                     <FiClock className="size-4" />
                     <time dateTime={latestCommit.data.committedAt}>
-                      {formatDate(latestCommit.data.committedAt, i18n.language)}
+                      {formatRelativeDate(
+                        latestCommit.data.committedAt,
+                        i18n.language,
+                        t,
+                      )}
                     </time>
                   </div>
 

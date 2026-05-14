@@ -4,7 +4,7 @@ import { FiClock } from "react-icons/fi";
 import { FaSpotify } from "react-icons/fa6";
 import { getRecentSpotifyTrack } from "../../api/spotify";
 import {
-  formatDate,
+  formatRelativeDate,
   getErrorMessage,
   initialState,
   type AsyncState,
@@ -90,7 +90,11 @@ const SpotifyUpdateCard = () => {
                   {latestTrack.data.isPlaying
                     ? t("updates.spotify.nowPlaying")
                     : latestTrack.data.playedAt
-                      ? formatDate(latestTrack.data.playedAt, i18n.language)
+                      ? formatRelativeDate(
+                          latestTrack.data.playedAt,
+                          i18n.language,
+                          t,
+                        )
                       : t("updates.spotify.recentlyPlayed")}
                 </time>
               </div>
