@@ -302,3 +302,11 @@ export async function getLatestCommit(): Promise<LatestGitHubCommit> {
 
   return inFlightLatestCommitRequest;
 }
+
+void (async () => {
+  try {
+    await getLatestCommit();
+  } catch (error) {
+    console.error("Failed to warm GitHub commit cache on startup", error);
+  }
+})();
