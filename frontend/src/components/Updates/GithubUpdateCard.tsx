@@ -50,10 +50,10 @@ const GithubUpdateCard = () => {
     <article className="flex h-full flex-col rounded-3xl border border-light/10 bg-dark/50 p-6 shadow-sm shadow-dark-light backdrop-blur-md">
       <div className="flex items-start gap-3">
         <div className="rounded-full border border-light/12 bg-light/10 p-3">
-          <FiGithub className="size-5 text-primary" />
+          <FiGithub className="size-5 text-accent" />
         </div>
         <div>
-          <p className="text-sm font-bold tracking-[0.2em] text-primary/80 uppercase">
+          <p className="text-sm font-bold tracking-[0.2em] text-accent/80 uppercase">
             {t("updates.github.title")}
           </p>
           <h3 className="text-2xl">{t("updates.github.subtitle")}</h3>
@@ -86,7 +86,7 @@ const GithubUpdateCard = () => {
                 href={latestCommit.data.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-auto pt-8 text-sm font-bold text-accent underline decoration-transparent underline-offset-4 transition hover:decoration-accent"
+                className="mt-auto pt-8 text-sm font-bold text-primary underline decoration-transparent underline-offset-4 transition hover:decoration-primary"
               >
                 {t("updates.github.link")}
               </a>
