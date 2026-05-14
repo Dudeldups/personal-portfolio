@@ -57,6 +57,10 @@ export const en = {
       title: "What I'm up to",
       desc: "A quick snapshot of the latest code I shipped and the music that was with me while building.",
       loading: "Loading latest activity...",
+      date: {
+        today: "Today",
+        yesterday: "Yesterday",
+      },
       github: {
         title: "GitHub",
         subtitle: "Latest commit",
