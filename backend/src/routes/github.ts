@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getLatestCommit } from "../features/github/getLatestCommit";
+import { getLatestCommit } from "../features/github/service";
 
 const githubRouter = Router();
 
