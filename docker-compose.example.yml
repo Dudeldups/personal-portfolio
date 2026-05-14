@@ -3,11 +3,11 @@ name: your-portfolio
 services:
   app:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./backend/Dockerfile
     container_name: your-portfolio
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "4000:4000"
     env_file:
-      - ./frontend/.env
+      - ./backend/.env
