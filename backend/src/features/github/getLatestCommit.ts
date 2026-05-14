@@ -1,4 +1,7 @@
-import { GITHUB_ACCESS_TOKEN } from "../../utils/assertEnv";
+import {
+  GITHUB_ACCESS_TOKEN,
+  GITHUB_CACHE_TTL_MS,
+} from "../../utils/assertEnv";
 
 type GitHubUserResponse = {
   login?: string;
@@ -46,6 +49,42 @@ const GITHUB_API_HEADERS = {
   Authorization: `Bearer ${GITHUB_ACCESS_TOKEN}`,
   "X-GitHub-Api-Version": "2022-11-28",
 };
+
+let latestCommitCache:
+  | {
+      value: LatestGitHubCommit;
+      expiresAt: number;
+    }
+  | null = null;
+
+let inFlightLatestCommitRequest: Promise<LatestGitHubCommit> | null = null;
+
+function updateLatestCommitCache(
+  latestCommit: LatestGitHubCommit,
+): LatestGitHubCommit {
+  latestCommitCache = {
+    value: latestCommit,
+    expiresAt: Date.now() + GITHUB_CACHE_TTL_MS,
+  };
+
+  return latestCommit;
+}
+
+function refreshLatestCommitInBackground(): void {
+  if (inFlightLatestCommitRequest) {
+    return;
+  }
+
+  inFlightLatestCommitRequest = fetchLatestCommit()
+    .then(updateLatestCommitCache)
+    .catch((error) => {
+      console.error("Failed to refresh latest GitHub commit in background", error);
+      return latestCommitCache?.value;
+    })
+    .finally(() => {
+      inFlightLatestCommitRequest = null;
+    }) as Promise<LatestGitHubCommit>;
+}
 
 async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url, {
@@ -192,7 +231,7 @@ async function findLatestCommitFromRepositories(
   return latestCommit;
 }
 
-export async function getLatestCommit(): Promise<LatestGitHubCommit> {
+async function fetchLatestCommit(): Promise<LatestGitHubCommit> {
   const currentUser = await fetchJson<GitHubUserResponse>(
     "https://api.github.com/user",
   );
@@ -231,4 +270,29 @@ export async function getLatestCommit(): Promise<LatestGitHubCommit> {
   throw new Error(
     'No GitHub commit found. The fallback repository scan needs "Metadata" (read) and "Contents" (read) repository permissions on the fine-grained token.',
   );
+}
+
+export async function getLatestCommit(): Promise<LatestGitHubCommit> {
+  const now = Date.now();
+
+  if (latestCommitCache) {
+    if (latestCommitCache.expiresAt > now) {
+      return latestCommitCache.value;
+    }
+
+    refreshLatestCommitInBackground();
+    return latestCommitCache.value;
+  }
+
+  if (inFlightLatestCommitRequest) {
+    return inFlightLatestCommitRequest;
+  }
+
+  inFlightLatestCommitRequest = fetchLatestCommit()
+    .then(updateLatestCommitCache)
+    .finally(() => {
+      inFlightLatestCommitRequest = null;
+    });
+
+  return inFlightLatestCommitRequest;
 }
