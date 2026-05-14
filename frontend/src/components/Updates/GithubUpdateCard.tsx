@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FiClock, FiGithub } from "react-icons/fi";
-import { siteConfig } from "../../config/site";
+import { getLatestGithubCommit } from "../../api/github";
 import {
   formatDate,
   getErrorMessage,
@@ -9,48 +9,6 @@ import {
   type AsyncState,
   type GitHubCommit,
 } from "./utils";
-
-const parseGitHubCommit = (payload: unknown): GitHubCommit | null => {
-  if (
-    !payload ||
-    typeof payload !== "object" ||
-    !("message" in payload) ||
-    !("repo" in payload) ||
-    !("committedAt" in payload) ||
-    !("sha" in payload) ||
-    !("isPrivate" in payload)
-  ) {
-    return null;
-  }
-
-  const commit = payload as {
-    message?: string;
-    repo?: string;
-    committedAt?: string;
-    sha?: string;
-    url?: string | null;
-    isPrivate?: boolean;
-  };
-
-  if (
-    typeof commit.message !== "string" ||
-    typeof commit.repo !== "string" ||
-    typeof commit.committedAt !== "string" ||
-    typeof commit.sha !== "string" ||
-    typeof commit.isPrivate !== "boolean"
-  ) {
-    return null;
-  }
-
-  return {
-    message: commit.message,
-    url: typeof commit.url === "string" ? commit.url : null,
-    repo: commit.repo,
-    committedAt: commit.committedAt,
-    sha: commit.sha,
-    isPrivate: commit.isPrivate,
-  };
-};
 
 const GithubUpdateCard = () => {
   const { t, i18n } = useTranslation();
@@ -62,30 +20,8 @@ const GithubUpdateCard = () => {
     const controller = new AbortController();
 
     async function loadGitHubCommit() {
-      if (!siteConfig.githubRecentCommitEndpoint) {
-        setLatestCommit({
-          data: null,
-          isLoading: false,
-          error: "missing-config",
-        });
-        return;
-      }
-
       try {
-        const response = await fetch(siteConfig.githubRecentCommitEndpoint, {
-          signal: controller.signal,
-        });
-
-        if (!response.ok) {
-          throw new Error(`GitHub request failed with ${response.status}`);
-        }
-
-        const payload = (await response.json()) as unknown;
-        const parsedCommit = parseGitHubCommit(payload);
-
-        if (!parsedCommit) {
-          throw new Error("GitHub response format is invalid");
-        }
+        const parsedCommit = await getLatestGithubCommit(controller.signal);
 
         setLatestCommit({
           data: parsedCommit,
