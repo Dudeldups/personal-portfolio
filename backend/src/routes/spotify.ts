@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
   exchangeSpotifyCodeForTokens,
-  getSpotifyRecentTrack,
   getSpotifyAuthorizeUrl,
-} from "../features/spotify/auth";
+} from "../features/spotify/api";
+import { getSpotifyRecentTrack } from "../features/spotify/service";
 
 const spotifyRouter = Router();
 
