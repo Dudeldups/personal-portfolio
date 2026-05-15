@@ -211,3 +211,4 @@ export function getLatestCommit(): Promise<LatestGitHubCommit> {
 }
 
 latestCommitCache.warm();
+latestCommitCache.startAutoRefresh();

@@ -16,6 +16,7 @@ export function createStaleWhileRevalidateCache<T>({
 }: StaleWhileRevalidateCacheOptions<T>) {
   let cache: CacheEntry<T> | null = null;
   let inFlight: Promise<T> | null = null;
+  let refreshTimer: NodeJS.Timeout | null = null;
 
   function writeCache(value: T): T {
     cache = {
@@ -71,8 +72,21 @@ export function createStaleWhileRevalidateCache<T>({
     });
   }
 
+  function startAutoRefresh(intervalMs = ttlMs): void {
+    if (refreshTimer) {
+      return;
+    }
+
+    refreshTimer = setInterval(() => {
+      refreshInBackground();
+    }, intervalMs);
+
+    refreshTimer.unref?.();
+  }
+
   return {
     get,
     warm,
+    startAutoRefresh,
   };
 }

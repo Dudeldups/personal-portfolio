@@ -93,3 +93,4 @@ export function getSpotifyRecentTrack(): Promise<SpotifyRecentTrack | null> {
 }
 
 recentTrackCache.warm();
+recentTrackCache.startAutoRefresh();
