@@ -5,13 +5,17 @@ import {
   SPOTIFY_REDIRECT_URI,
 } from "../../utils/assertEnv";
 import type {
+  SpotifyCurrentlyPlayingResponse,
   SpotifyRecentTrackResponse,
   SpotifyTokenResponse,
 } from "./types";
 
 const SPOTIFY_ACCOUNTS_BASE_URL = "https://accounts.spotify.com";
 const SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1";
-const SPOTIFY_RECENTLY_PLAYED_SCOPE = "user-read-recently-played";
+const SPOTIFY_SCOPES = [
+  "user-read-recently-played",
+  "user-read-currently-playing",
+].join(" ");
 
 function createSpotifyBasicAuthHeader(): string {
   const credentials = `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`;
@@ -23,7 +27,7 @@ export function getSpotifyAuthorizeUrl(): string {
     client_id: SPOTIFY_CLIENT_ID,
     response_type: "code",
     redirect_uri: SPOTIFY_REDIRECT_URI,
-    scope: SPOTIFY_RECENTLY_PLAYED_SCOPE,
+    scope: SPOTIFY_SCOPES,
   });
 
   return `${SPOTIFY_ACCOUNTS_BASE_URL}/authorize?${params.toString()}`;
@@ -101,6 +105,39 @@ export async function getSpotifyRecentlyPlayed(
   if (!response.ok) {
     throw new Error(
       `Spotify recent track request failed with ${response.status}: ${
+        payload.error?.message ?? "Unknown error"
+      }`,
+    );
+  }
+
+  return payload;
+}
+
+export async function getSpotifyCurrentlyPlaying(
+  accessToken: string,
+): Promise<SpotifyCurrentlyPlayingResponse | null> {
+  const response = await fetch(
+    `${SPOTIFY_API_BASE_URL}/me/player/currently-playing`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  if (response.status === 204) {
+    return null;
+  }
+
+  const payload = (await response.json()) as SpotifyCurrentlyPlayingResponse & {
+    error?: {
+      message?: string;
+    };
+  };
+
+  if (!response.ok) {
+    throw new Error(
+      `Spotify currently playing request failed with ${response.status}: ${
         payload.error?.message ?? "Unknown error"
       }`,
     );

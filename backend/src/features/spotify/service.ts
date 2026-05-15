@@ -1,10 +1,15 @@
 import { SPOTIFY_CACHE_TTL_MS } from "../../utils/assertEnv";
 import { createStaleWhileRevalidateCache } from "../../utils/createStaleWhileRevalidateCache";
 import {
+  getSpotifyCurrentlyPlaying,
   getSpotifyRecentlyPlayed,
   refreshSpotifyAccessToken,
 } from "./api";
-import type { SpotifyRecentTrack, SpotifyRecentTrackResponse } from "./types";
+import type {
+  SpotifyCurrentlyPlayingResponse,
+  SpotifyRecentTrack,
+  SpotifyRecentTrackResponse,
+} from "./types";
 
 function mapSpotifyRecentTrack(
   payload: SpotifyRecentTrackResponse,
@@ -33,8 +38,43 @@ function mapSpotifyRecentTrack(
   };
 }
 
+function mapSpotifyCurrentlyPlayingTrack(
+  payload: SpotifyCurrentlyPlayingResponse | null,
+): SpotifyRecentTrack | null {
+  const track = payload?.item;
+
+  if (
+    !payload?.is_playing ||
+    payload.currently_playing_type !== "track" ||
+    !track?.name ||
+    !track.external_urls?.spotify ||
+    !Array.isArray(track.artists)
+  ) {
+    return null;
+  }
+
+  return {
+    title: track.name,
+    artists: track.artists
+      .map((artist) => artist.name)
+      .filter(Boolean)
+      .join(", "),
+    album: track.album?.name,
+    url: track.external_urls.spotify,
+    isPlaying: true,
+  };
+}
+
 async function loadRecentTrack(): Promise<SpotifyRecentTrack | null> {
   const accessToken = await refreshSpotifyAccessToken();
+  const currentlyPlayingPayload = await getSpotifyCurrentlyPlaying(accessToken);
+  const currentlyPlayingTrack =
+    mapSpotifyCurrentlyPlayingTrack(currentlyPlayingPayload);
+
+  if (currentlyPlayingTrack) {
+    return currentlyPlayingTrack;
+  }
+
   const payload = await getSpotifyRecentlyPlayed(accessToken);
 
   return mapSpotifyRecentTrack(payload);
