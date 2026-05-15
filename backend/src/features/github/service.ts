@@ -177,15 +177,22 @@ async function loadLatestCommit(): Promise<LatestGitHubCommit> {
   const latestCommitFromEvents = await findLatestCommitInEventFeed(
     currentUser.login,
   );
+  const latestCommitFromRepositories = await findLatestCommitInRepositories(
+    currentUser.login,
+  );
 
-  if (latestCommitFromEvents) {
-    return latestCommitFromEvents;
-  }
+  const latestCommit = [latestCommitFromEvents, latestCommitFromRepositories]
+    .filter((commit): commit is LatestGitHubCommit => commit !== null)
+    .reduce<LatestGitHubCommit | null>((currentLatest, candidate) => {
+      if (!isNewerCommit(candidate, currentLatest)) {
+        return currentLatest;
+      }
 
-  const fallbackCommit = await findLatestCommitInRepositories(currentUser.login);
+      return candidate;
+    }, null);
 
-  if (fallbackCommit) {
-    return fallbackCommit;
+  if (latestCommit) {
+    return latestCommit;
   }
 
   throw new Error(
