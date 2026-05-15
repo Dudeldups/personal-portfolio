@@ -52,5 +52,5 @@ export type SpotifyRecentTrack = {
   album?: string;
   url: string;
   playedAt?: string;
-  isPlaying: false;
+  isPlaying: boolean;
 };
