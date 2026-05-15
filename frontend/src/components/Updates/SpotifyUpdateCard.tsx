@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { FiClock } from "react-icons/fi";
 import { FaSpotify } from "react-icons/fa6";
@@ -11,7 +12,7 @@ import {
   type SpotifyTrack,
 } from "./utils";
 
-const REFRESH_INTERVAL_MS = 60_000;
+const REFRESH_INTERVAL_MS = 30_000;
 
 const SpotifyUpdateCard = () => {
   const { t, i18n } = useTranslation();
@@ -55,6 +56,19 @@ const SpotifyUpdateCard = () => {
     };
   }, []);
 
+  const TRACK_TRANSITION = {
+    duration: 0.35,
+    ease: "easeOut",
+  } as const;
+
+  const trackMotionKey = latestTrack.data
+    ? [
+        latestTrack.data.url,
+        latestTrack.data.playedAt ?? "now-playing",
+        latestTrack.data.isPlaying ? "playing" : "recent",
+      ].join(":")
+    : "empty";
+
   return (
     <article className="flex h-full flex-col rounded-3xl border border-light/10 bg-dark/50 p-6 shadow-sm shadow-dark-light backdrop-blur-md">
       <div className="flex items-start gap-3">
@@ -74,18 +88,28 @@ const SpotifyUpdateCard = () => {
           <p>{t("updates.loading")}</p>
         ) : latestTrack.data ? (
           <div className="flex flex-1 flex-col">
-            <p className="text-xl font-bold text-white">
-              {latestTrack.data.title}
-            </p>
-            <p className="mt-3 text-base text-light/85">
-              {latestTrack.data.artists}
-            </p>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={trackMotionKey}
+                initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
+                transition={TRACK_TRANSITION}
+              >
+                <p className="text-xl font-bold text-white">
+                  {latestTrack.data.title}
+                </p>
+                <p className="mt-3 text-base text-light/85">
+                  {latestTrack.data.artists}
+                </p>
 
-            {latestTrack.data.album ? (
-              <p className="mt-2 text-sm text-light/70">
-                {latestTrack.data.album}
-              </p>
-            ) : null}
+                {latestTrack.data.album ? (
+                  <p className="mt-2 text-sm text-light/70">
+                    {latestTrack.data.album}
+                  </p>
+                ) : null}
+              </motion.div>
+            </AnimatePresence>
 
             <footer className="mt-auto pt-8">
               <div className="flex items-center gap-2 text-sm text-light/70">
