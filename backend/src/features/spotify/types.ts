@@ -29,6 +29,23 @@ export type SpotifyRecentTrackResponse = {
   };
 };
 
+export type SpotifyCurrentlyPlayingResponse = {
+  is_playing?: boolean;
+  currently_playing_type?: string;
+  item?: {
+    name?: string;
+    album?: {
+      name?: string;
+    };
+    artists?: Array<{
+      name?: string;
+    }>;
+    external_urls?: {
+      spotify?: string;
+    };
+  };
+};
+
 export type SpotifyRecentTrack = {
   title: string;
   artists: string;
