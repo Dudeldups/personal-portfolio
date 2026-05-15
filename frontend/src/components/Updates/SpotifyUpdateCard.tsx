@@ -11,6 +11,8 @@ import {
   type SpotifyTrack,
 } from "./utils";
 
+const REFRESH_INTERVAL_MS = 60_000;
+
 const SpotifyUpdateCard = () => {
   const { t, i18n } = useTranslation();
   const [latestTrack, setLatestTrack] = useState<AsyncState<SpotifyTrack>>(() =>
@@ -43,8 +45,14 @@ const SpotifyUpdateCard = () => {
     }
 
     void loadSpotifyTrack();
+    const refreshInterval = window.setInterval(() => {
+      void loadSpotifyTrack();
+    }, REFRESH_INTERVAL_MS);
 
-    return () => controller.abort();
+    return () => {
+      window.clearInterval(refreshInterval);
+      controller.abort();
+    };
   }, []);
 
   return (

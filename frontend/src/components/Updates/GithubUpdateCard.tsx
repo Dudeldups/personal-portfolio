@@ -10,6 +10,8 @@ import {
   type GitHubCommit,
 } from "./utils";
 
+const REFRESH_INTERVAL_MS = 60_000;
+
 const GithubUpdateCard = () => {
   const { t, i18n } = useTranslation();
   const [latestCommit, setLatestCommit] = useState<AsyncState<GitHubCommit>>(
@@ -42,8 +44,14 @@ const GithubUpdateCard = () => {
     }
 
     void loadGitHubCommit();
+    const refreshInterval = window.setInterval(() => {
+      void loadGitHubCommit();
+    }, REFRESH_INTERVAL_MS);
 
-    return () => controller.abort();
+    return () => {
+      window.clearInterval(refreshInterval);
+      controller.abort();
+    };
   }, []);
 
   return (
