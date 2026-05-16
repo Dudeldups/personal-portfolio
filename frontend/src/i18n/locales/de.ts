@@ -40,6 +40,10 @@ export const de = {
         title: "Big Ambitions Tools",
         desc: "Eine Begleit-App für das Spiel Big Ambitions, die Spieler dabei unterstützt, ihre Fabriklayouts und Logistik zu planen, zu optimieren und zu verwalten.",
       },
+      "application-tracker": {
+        title: "Application Tracker",
+        desc: "Eine Webanwendung zur Verwaltung und Nachverfolgung von Bewerbungen mit Dashboard, Status-Verlauf, Kommunikations-Tracking und detaillierten Bewerbungsnotizen.",
+      },
       scoot: {
         title: "Scoot Webseite",
         desc: "Eine mehrseitige Website für einen fiktiven Roller-Verleihservice",
@@ -47,10 +51,6 @@ export const de = {
       coffeeroasters: {
         title: "Coffeeroasters Webseite",
         desc: "Eine mehrseitige Website für ein fiktives Kaffeeunternehmen",
-      },
-      maker: {
-        title: "Maker Landing Page",
-        desc: "Eine Landing Page für ein fiktives Produkt",
       },
     },
     updates: {
@@ -65,7 +65,8 @@ export const de = {
         title: "GitHub",
         subtitle: "Letzter Commit",
         link: "Commit ansehen",
-        privateRepo: "Dieser Commit wurde in einem privaten Repository gemacht.",
+        privateRepo:
+          "Dieser Commit wurde in einem privaten Repository gemacht.",
         privateRepoImageAlt: "Alright then, keep your secrets Meme",
       },
       spotify: {

@@ -8,6 +8,14 @@
     "githubLink": "https://github.com/Dudeldups/big-ambitions-tools"
   },
   {
+    "id": "application-tracker",
+    "title": "Application Tracker",
+    "techs": ["React", "TypeScript", "Node.js", "PostgreSQL"],
+    "image": "application-tracker.png",
+    "demoLink": "https://applications.dudeldups.dev",
+    "githubLink": "https://github.com/Dudeldups/application-tracker"
+  },
+  {
     "id": "scoot",
     "title": "Scoot",
     "techs": ["React", "TypeScript", "Styled Components"],
@@ -22,13 +30,5 @@
     "image": "coffeeroasters.png",
     "demoLink": "https://coffeeroasters-9000.netlify.app/",
     "githubLink": "https://github.com/Dudeldups/FM-coffeeroasters"
-  },
-  {
-    "id": "maker",
-    "title": "Maker",
-    "techs": ["HTML", "TypeScript", "Tailwind CSS"],
-    "image": "maker.png",
-    "demoLink": "https://dudeldups.github.io/FM-maker-landing-page/",
-    "githubLink": "https://github.com/Dudeldups/FM-maker-landing-page"
   }
 ]

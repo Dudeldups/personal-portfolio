@@ -40,6 +40,10 @@ export const en = {
         title: "Big Ambitions Tools",
         desc: "A companion app for the game Big Ambitions, designed to help players plan, optimize, and manage their factory setups and logistics.",
       },
+      "application-tracker": {
+        title: "Application Tracker",
+        desc: "A fullstack web application for managing and tracking job applications, featuring dashboards, status history, communication tracking, and detailed application notes.",
+      },
       scoot: {
         title: "Scoot Website",
         desc: "A multi-page website for a fictional scooter rental service",
@@ -47,10 +51,6 @@ export const en = {
       coffeeroasters: {
         title: "Coffeeroasters Website",
         desc: "A multi-page website for a fictional coffee company",
-      },
-      maker: {
-        title: "Maker Landing Page",
-        desc: "A landing page for a fictional product",
       },
     },
     updates: {
