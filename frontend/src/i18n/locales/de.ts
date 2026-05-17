@@ -164,5 +164,23 @@ export const de = {
     footer: {
       disclaimer: "Alle Rechte vorbehalten",
     },
+    metadata: {
+      siteName: "Arne Jacob | Portfolio",
+      home: {
+        title: "Arne Jacob | Webentwickler Portfolio",
+        description:
+          "Portfolio von Arne Jacob, Webentwickler mit Fokus auf React, TypeScript und MERN. Projekte, Skills und Kontaktmöglichkeiten.",
+      },
+      imprint: {
+        title: "Impressum | Arne Jacob",
+        description:
+          "Impressum von Arne Jacob mit Anbieterangaben und Kontaktinformationen gemäß den gesetzlichen Vorgaben.",
+      },
+      privacy: {
+        title: "Datenschutzerklärung | Arne Jacob",
+        description:
+          "Datenschutzerklärung von Arne Jacob mit Informationen zur Verarbeitung personenbezogener Daten auf dieser Website.",
+      },
+    },
   },
 };

@@ -162,5 +162,23 @@ export const en = {
     footer: {
       disclaimer: "All rights reserved",
     },
+    metadata: {
+      siteName: "Arne Jacob | Portfolio",
+      home: {
+        title: "Arne Jacob | Web Developer Portfolio",
+        description:
+          "Portfolio of Arne Jacob, web developer focused on React, TypeScript, and MERN. Projects, skills, and contact details.",
+      },
+      imprint: {
+        title: "Legal Notice | Arne Jacob",
+        description:
+          "Legal notice of Arne Jacob with provider details and contact information in accordance with legal requirements.",
+      },
+      privacy: {
+        title: "Privacy Policy | Arne Jacob",
+        description:
+          "Privacy policy of Arne Jacob with information about the processing of personal data on this website.",
+      },
+    },
   },
 };
