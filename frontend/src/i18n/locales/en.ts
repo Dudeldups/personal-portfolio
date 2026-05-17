@@ -165,7 +165,7 @@ export const en = {
     metadata: {
       siteName: "Arne Jacob | Portfolio",
       home: {
-        title: "Arne Jacob | Web Developer Portfolio",
+        title: "Arne Jacob | Developer Portfolio",
         description:
           "Portfolio of Arne Jacob, web developer focused on React, TypeScript, and MERN. Projects, skills, and contact details.",
       },

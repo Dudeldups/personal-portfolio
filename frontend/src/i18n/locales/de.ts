@@ -167,7 +167,7 @@ export const de = {
     metadata: {
       siteName: "Arne Jacob | Portfolio",
       home: {
-        title: "Arne Jacob | Webentwickler Portfolio",
+        title: "Arne Jacob | Entwickler Portfolio",
         description:
           "Portfolio von Arne Jacob, Webentwickler mit Fokus auf React, TypeScript und MERN. Projekte, Skills und Kontaktmöglichkeiten.",
       },
