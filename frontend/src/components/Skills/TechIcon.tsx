@@ -1,6 +1,7 @@
 import { FaCss3Alt, FaHtml5, FaLess, FaReact, FaSass } from "react-icons/fa6";
 import type { IconType } from "react-icons";
 import {
+  SiDocker,
   SiMongodb,
   SiNodedotjs,
   SiPostgresql,
@@ -24,6 +25,7 @@ const techIcons: Record<string, IconType> = {
   "Node.js": SiNodedotjs,
   MongoDB: SiMongodb,
   PostgreSQL: SiPostgresql,
+  Docker: SiDocker,
   Sass: FaSass,
   "Tailwind CSS": SiTailwindcss,
   "Styled Components": SiStyledcomponents,
@@ -38,6 +40,7 @@ const techColors: Record<string, string> = {
   "Node.js": "#5FA04E",
   MongoDB: "#47A248",
   PostgreSQL: "#4169E1",
+  Docker: "#2496ED",
   Sass: "#CC6699",
   "Tailwind CSS": "#06B6D4",
   "Styled Components": "#DB7093",

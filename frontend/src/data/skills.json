@@ -28,6 +28,10 @@
     "isHidden": false
   },
   {
+    "name": "Docker",
+    "isHidden": false
+  },
+  {
     "name": "Sass",
     "isHidden": true
   },
