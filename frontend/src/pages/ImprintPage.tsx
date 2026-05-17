@@ -16,7 +16,7 @@ const ImprintPage = () => {
           ))}
           {siteConfig.legalEmail ? (
             <p>
-              {t("legal.imprint.emailLabel")}:{" "}
+              {t("general.emailLabel")}:{" "}
               <a
                 className="text-primary hover:underline"
                 href={`mailto:${siteConfig.legalEmail}`}
@@ -30,7 +30,9 @@ const ImprintPage = () => {
 
       <section>
         <h2>{t("legal.imprint.responsibleTitle")}</h2>
-        {siteConfig.legalName ? <p className="mt-6">{siteConfig.legalName}</p> : null}
+        {siteConfig.legalName ? (
+          <p className="mt-6">{siteConfig.legalName}</p>
+        ) : null}
       </section>
     </LegalLayout>
   );

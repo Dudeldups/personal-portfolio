@@ -4,6 +4,7 @@ export const de = {
       welcome: "Willkommen auf meiner Webseite",
       switcherLabel: "Sprache auswählen",
       scrollToTop: "Nach oben scrollen",
+      emailLabel: "E-Mail",
     },
     nav: {
       home: "Start",
@@ -94,7 +95,6 @@ export const de = {
       imprint: {
         title: "Impressum",
         providerTitle: "Angaben gemäß § 5 DDG",
-        emailLabel: "E-Mail",
         responsibleTitle: "Verantwortlich für den Inhalt",
       },
       privacy: {

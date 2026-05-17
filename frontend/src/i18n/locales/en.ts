@@ -4,6 +4,7 @@ export const en = {
       welcome: "Welcome to my website",
       switcherLabel: "Select language",
       scrollToTop: "Scroll to top",
+      emailLabel: "Email",
     },
     nav: {
       home: "Home",
@@ -92,7 +93,6 @@ export const en = {
       imprint: {
         title: "Legal Notice",
         providerTitle: "Provider information according to section 5 DDG",
-        emailLabel: "Email",
         responsibleTitle: "Responsible for the content",
       },
       privacy: {
