@@ -30,7 +30,7 @@ export const de = {
     },
     skills: {
       title: "Tech Stack",
-      desc: "Ich habe Erfahrung mit einer Vielzahl von Technologien und Tools. Hier sind einige, mit denen ich arbeite:",
+      desc: "Ich nutze eine große Bandbreite moderner Webtechnologien für Frontend- und Backend-Entwicklung sowie für Datenbanken, Docker, Deployment-Workflows und CI/CD.",
     },
     projects: {
       title: "Projekte",
