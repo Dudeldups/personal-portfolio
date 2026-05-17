@@ -18,12 +18,12 @@ const Skills = () => {
       id="skills"
       className="section px-page max-lg:bg-dark"
     >
-      <div className="mx-auto w-full max-w-page text-center lg:text-left">
+      <div className="@container/skills mx-auto w-full max-w-page text-center lg:text-left">
         <hgroup>
           <h2>{t("skills.title")}</h2>
           <p className="mx-auto max-lg:max-w-96">{t("skills.desc")}</p>
         </hgroup>
-        <ul className="mx-auto mt-10 flex max-w-88 flex-wrap justify-center gap-8 lg:mt-16">
+        <ul className="mx-auto mt-10 flex w-full max-w-sm flex-wrap justify-center justify-items-center gap-x-4 gap-y-8 lg:mt-16 @sm:grid @sm:max-w-max @sm:grid-cols-4">
           {skills.map(
             (skill, index) =>
               !skill.isHidden && (
