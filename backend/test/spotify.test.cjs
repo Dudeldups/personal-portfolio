@@ -21,13 +21,13 @@ test('successful requests are cached, deduplicated and stale data is marked unti
   await flush();
   assert.equal(calls, 1);
   resolve(track);
-  assert.deepEqual(await a, track); assert.deepEqual(await b, track);
-  assert.deepEqual(await cache.get(), track); assert.equal(calls, 1);
+  assert.deepEqual(await a, { status: "available", track }); assert.deepEqual(await b, { status: "available", track });
+  assert.deepEqual(await cache.get(), { status: "available", track }); assert.equal(calls, 1);
   now += 1001;
-  assert.deepEqual(await cache.get(), { ...track, isPlaying: false, stale: true });
+  assert.deepEqual(await cache.get(), { status: "available", track: { ...track, isPlaying: false, stale: true } });
   await flush(); assert.equal(calls, 2);
   now += 15 * 60_000;
-  assert.equal(await cache.get(), null);
+  assert.deepEqual(await cache.get(), { status: "unavailable" });
   resolve(track); await flush();
 });
 
@@ -35,8 +35,8 @@ test('429 Retry-After blocks requests and logs once per attempt', async () => {
   let now = 100000, calls = 0, logs = 0;
   Date.now = () => now; console.warn = () => logs++;
   const cache = createSpotifyCache({ ttlMs: 1000, load: async () => { calls++; throw new SpotifyRequestError('recent track', 429, 300000); } });
-  assert.equal(await cache.get(), null);
-  for (let i = 0; i < 10; i++) assert.equal(await cache.get(), null);
+  assert.deepEqual(await cache.get(), { status: "unavailable" });
+  for (let i = 0; i < 10; i++) assert.deepEqual(await cache.get(), { status: "unavailable" });
   assert.equal(calls, 1); assert.equal(logs, 1);
   now += 300001; await cache.get(); assert.equal(calls, 2);
 });
@@ -45,10 +45,10 @@ test('temporary and authorization errors back off and can recover', async () => 
   let now = 100000, calls = 0;
   Date.now = () => now; console.warn = () => {};
   const cache = createSpotifyCache({ ttlMs: 1000, load: async () => { calls++; if (calls === 1) throw new Error('network'); if (calls === 2) throw new SpotifyRequestError('token refresh', 401); return track; } });
-  assert.equal(await cache.get(), null); now += 60001;
-  assert.equal(await cache.get(), null); now += 60001;
-  assert.equal(await cache.get(), null); assert.equal(calls, 2);
-  now += 3600000; assert.deepEqual(await cache.get(), track); assert.equal(calls, 3);
+  assert.deepEqual(await cache.get(), { status: "unavailable" }); now += 60001;
+  assert.deepEqual(await cache.get(), { status: "unavailable" }); now += 60001;
+  assert.deepEqual(await cache.get(), { status: "unavailable" }); assert.equal(calls, 2);
+  now += 3600000; assert.deepEqual(await cache.get(), { status: "available", track }); assert.equal(calls, 3);
 });
 
 test('Spotify responses handle success, 204, 429 and token errors without exposing response bodies', async () => {
@@ -60,4 +60,20 @@ test('Spotify responses handle success, 204, 429 and token errors without exposi
   await assert.rejects(getSpotifyRecentlyPlayed('token'), e => e.status === 429 && e.retryAfterMs === 180000 && !e.message.includes('secret'));
   global.fetch = async () => new Response('{}', { status: 401 });
   await assert.rejects(refreshSpotifyAccessToken(), e => e.status === 401 && e.operation === 'token refresh');
+});
+
+
+test('successful empty results are cached and become unavailable when stale', async () => {
+  let now = 100000, calls = 0;
+  Date.now = () => now;
+  let resolve;
+  const cache = createSpotifyCache({ ttlMs: 1000, load: () => { calls++; return calls === 1 ? Promise.resolve(null) : new Promise(r => { resolve = r; }); } });
+  assert.deepEqual(await cache.get(), { status: 'empty' });
+  assert.deepEqual(await cache.get(), { status: 'empty' });
+  assert.equal(calls, 1);
+  now += 1001;
+  assert.deepEqual(await cache.get(), { status: 'unavailable' });
+  await flush();
+  resolve(null); await flush();
+  assert.deepEqual(await cache.get(), { status: 'empty' });
 });

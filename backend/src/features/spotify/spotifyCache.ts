@@ -6,6 +6,11 @@ const MAX_STALE_MS = 15 * 60_000;
 const MAX_BACKOFF_MS = 30 * 60_000;
 const AUTH_BACKOFF_MS = 60 * 60_000;
 
+export type SpotifyCacheResult =
+  | { status: "available"; track: SpotifyRecentTrack }
+  | { status: "empty" }
+  | { status: "unavailable" };
+
 type Options = {
   ttlMs: number;
   load: () => Promise<SpotifyRecentTrack | null>;
@@ -37,18 +42,25 @@ export function createSpotifyCache({ ttlMs, load }: Options) {
     }).finally(() => { inFlight = null; });
   }
 
-  async function get(): Promise<SpotifyRecentTrack | null> {
+  async function get(): Promise<SpotifyCacheResult> {
     const now = Date.now();
     if (!entry || now >= entry.fetchedAt + ttlMs) refresh();
     if (!entry && inFlight) await inFlight;
     if (!entry || now >= entry.fetchedAt + ttlMs + MAX_STALE_MS) {
       if (entry && now >= entry.fetchedAt + ttlMs + MAX_STALE_MS) entry = null;
-      return null;
+      return { status: "unavailable" };
     }
-    if (!entry.value) return null;
-    return now >= entry.fetchedAt + ttlMs
-      ? { ...entry.value, isPlaying: false, stale: true }
-      : entry.value;
+    if (!entry.value) {
+      return now >= entry.fetchedAt + ttlMs
+        ? { status: "unavailable" }
+        : { status: "empty" };
+    }
+    return {
+      status: "available",
+      track: now >= entry.fetchedAt + ttlMs
+        ? { ...entry.value, isPlaying: false, stale: true }
+        : entry.value,
+    };
   }
 
   return { get };

@@ -1,5 +1,5 @@
 import { SPOTIFY_CACHE_TTL_MS } from "../../utils/assertEnv";
-import { createSpotifyCache } from "./spotifyCache";
+import { createSpotifyCache, type SpotifyCacheResult } from "./spotifyCache";
 import {
   getSpotifyCurrentlyPlaying,
   getSpotifyRecentlyPlayed,
@@ -105,6 +105,6 @@ const recentTrackCache = createSpotifyCache({
   },
 });
 
-export function getSpotifyRecentTrack(): Promise<SpotifyRecentTrack | null> {
+export function getSpotifyRecentTrack(): Promise<SpotifyCacheResult> {
   return recentTrackCache.get();
 }

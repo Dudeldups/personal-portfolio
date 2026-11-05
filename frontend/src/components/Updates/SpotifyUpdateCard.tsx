@@ -29,7 +29,7 @@ const SpotifyUpdateCard = () => {
         setLatestTrack({
           data: parsedTrack,
           isLoading: false,
-          error: null,
+          error: parsedTrack ? null : "empty",
         });
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
@@ -143,7 +143,7 @@ const SpotifyUpdateCard = () => {
             </footer>
           </div>
         ) : (
-          <p>{t("updates.spotify.unavailable")}</p>
+          <p>{t(latestTrack.error === "empty" ? "updates.spotify.empty" : "updates.spotify.unavailable")}</p>
         )}
       </div>
     </article>

@@ -91,7 +91,7 @@ credentials, scopes, app access and quota mode if they persist. Failures are log
 once per attempted refresh with status, operation, next attempt and failure count;
 recovery is logged once. No tokens or response bodies are logged. Cache entries are
 in memory only; expired data is marked as last known and discarded after 15 more
-minutes. If nothing usable is available the card displays a neutral status.
+minutes. A successful empty listening history returns HTTP 200 with `{"status":"empty"}` and displays a neutral empty-history message. If the cache is unavailable, the route returns HTTP 503 and the card displays a temporary-unavailability message.
 
 The previous implementation refreshed every minute even without visitors, obtained
 a new access token each time, ignored `Retry-After`, and allowed each stale-cache

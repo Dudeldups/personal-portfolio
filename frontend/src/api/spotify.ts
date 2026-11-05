@@ -1,6 +1,7 @@
 import { fetchJson } from "./fetchJson";
 
 type RecentSpotifyTrackResponse = {
+  status?: "empty";
   title?: string;
   artists?: string;
   album?: string;
@@ -44,11 +45,11 @@ function parseRecentSpotifyTrack(
 
 export async function getRecentSpotifyTrack(
   signal?: AbortSignal,
-): Promise<RecentSpotifyTrack> {
+): Promise<RecentSpotifyTrack | null> {
   const payload = await fetchJson<RecentSpotifyTrackResponse>(
     "/api/spotify/recent-track",
     { signal },
   );
 
-  return parseRecentSpotifyTrack(payload);
+  return payload.status === "empty" ? null : parseRecentSpotifyTrack(payload);
 }
