@@ -71,6 +71,9 @@ export const de = {
         privateRepoImageAlt: "Alright then, keep your secrets Meme",
       },
       spotify: {
+        empty: "Kein zuletzt gehörter Titel vorhanden.",
+        lastKnown: "Zuletzt bekannter Titel",
+        unavailable: "Spotify-Status vorübergehend nicht verfügbar.",
         title: "Spotify",
         subtitle: "Letzter Song",
         link: "In Spotify öffnen",

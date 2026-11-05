@@ -6,13 +6,12 @@ import { FaSpotify } from "react-icons/fa6";
 import { getRecentSpotifyTrack } from "../../api/spotify";
 import {
   formatRelativeDate,
-  getErrorMessage,
   initialState,
   type AsyncState,
   type SpotifyTrack,
 } from "./utils";
 
-const REFRESH_INTERVAL_MS = 30_000;
+const REFRESH_INTERVAL_MS = 120_000;
 
 const SpotifyUpdateCard = () => {
   const { t, i18n } = useTranslation();
@@ -30,7 +29,7 @@ const SpotifyUpdateCard = () => {
         setLatestTrack({
           data: parsedTrack,
           isLoading: false,
-          error: null,
+          error: parsedTrack ? null : "empty",
         });
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
@@ -119,7 +118,9 @@ const SpotifyUpdateCard = () => {
                     latestTrack.data.playedAt ?? new Date().toISOString()
                   }
                 >
-                  {latestTrack.data.isPlaying
+                  {latestTrack.data.stale
+                    ? t("updates.spotify.lastKnown")
+                    : latestTrack.data.isPlaying
                     ? t("updates.spotify.nowPlaying")
                     : latestTrack.data.playedAt
                       ? formatRelativeDate(
@@ -142,7 +143,7 @@ const SpotifyUpdateCard = () => {
             </footer>
           </div>
         ) : (
-          <p>{getErrorMessage(t, latestTrack.error)}</p>
+          <p>{t(latestTrack.error === "empty" ? "updates.spotify.empty" : "updates.spotify.unavailable")}</p>
         )}
       </div>
     </article>

@@ -1,12 +1,14 @@
 import { fetchJson } from "./fetchJson";
 
 type RecentSpotifyTrackResponse = {
+  status?: "empty";
   title?: string;
   artists?: string;
   album?: string;
   url?: string;
   playedAt?: string;
   isPlaying?: boolean;
+  stale?: boolean;
 };
 
 export type RecentSpotifyTrack = {
@@ -16,6 +18,7 @@ export type RecentSpotifyTrack = {
   url: string;
   playedAt?: string;
   isPlaying?: boolean;
+  stale?: boolean;
 };
 
 function parseRecentSpotifyTrack(
@@ -36,16 +39,17 @@ function parseRecentSpotifyTrack(
     url: payload.url,
     playedAt: payload.playedAt,
     isPlaying: payload.isPlaying,
+    stale: payload.stale,
   };
 }
 
 export async function getRecentSpotifyTrack(
   signal?: AbortSignal,
-): Promise<RecentSpotifyTrack> {
+): Promise<RecentSpotifyTrack | null> {
   const payload = await fetchJson<RecentSpotifyTrackResponse>(
     "/api/spotify/recent-track",
     { signal },
   );
 
-  return parseRecentSpotifyTrack(payload);
+  return payload.status === "empty" ? null : parseRecentSpotifyTrack(payload);
 }
