@@ -7,6 +7,7 @@ type RecentSpotifyTrackResponse = {
   url?: string;
   playedAt?: string;
   isPlaying?: boolean;
+  stale?: boolean;
 };
 
 export type RecentSpotifyTrack = {
@@ -16,6 +17,7 @@ export type RecentSpotifyTrack = {
   url: string;
   playedAt?: string;
   isPlaying?: boolean;
+  stale?: boolean;
 };
 
 function parseRecentSpotifyTrack(
@@ -36,6 +38,7 @@ function parseRecentSpotifyTrack(
     url: payload.url,
     playedAt: payload.playedAt,
     isPlaying: payload.isPlaying,
+    stale: payload.stale,
   };
 }
 

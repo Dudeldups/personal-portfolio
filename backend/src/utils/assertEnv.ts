@@ -50,7 +50,7 @@ export const GITHUB_CACHE_TTL_MS = parsePositiveInteger(
 );
 export const SPOTIFY_CACHE_TTL_MS = parsePositiveInteger(
   process.env.SPOTIFY_CACHE_TTL_MS,
-  60_000,
+  120_000,
   "SPOTIFY_CACHE_TTL_MS",
 );
 export const GITHUB_ACCESS_TOKEN = assertEnv("GITHUB_ACCESS_TOKEN");

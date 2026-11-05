@@ -12,6 +12,22 @@ import type {
 
 const SPOTIFY_ACCOUNTS_BASE_URL = "https://accounts.spotify.com";
 const SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1";
+export class SpotifyRequestError extends Error {
+  constructor(public readonly operation: string, public readonly status: number, public readonly retryAfterMs = 0) {
+    super(`Spotify ${operation} failed with HTTP ${status}`);
+  }
+}
+
+function checkResponse(response: Response, operation: string): void {
+  if (!response.ok) {
+    const raw = response.headers.get("retry-after");
+    const parsed = raw && /^\d+$/.test(raw.trim()) ? Number(raw) : 0;
+    const seconds = Number.isFinite(parsed) && parsed <= 8_000_000_000 ? parsed : 0;
+    const dateDelay = raw && !seconds ? Date.parse(raw) - Date.now() : 0;
+    throw new SpotifyRequestError(operation, response.status, Math.max(0, seconds * 1000 || dateDelay || 0));
+  }
+}
+
 const SPOTIFY_SCOPES = [
   "user-read-recently-played",
   "user-read-currently-playing",
@@ -37,6 +53,7 @@ export async function exchangeSpotifyCodeForTokens(
   code: string,
 ): Promise<SpotifyTokenResponse> {
   const response = await fetch(`${SPOTIFY_ACCOUNTS_BASE_URL}/api/token`, {
+    signal: AbortSignal.timeout(5000),
     method: "POST",
     headers: {
       Authorization: createSpotifyBasicAuthHeader(),
@@ -49,21 +66,13 @@ export async function exchangeSpotifyCodeForTokens(
     }),
   });
 
-  const payload = (await response.json()) as SpotifyTokenResponse;
-
-  if (!response.ok) {
-    throw new Error(
-      `Spotify token exchange failed with ${response.status}: ${
-        payload.error_description ?? payload.error ?? "Unknown error"
-      }`,
-    );
-  }
-
-  return payload;
+  checkResponse(response, "token exchange");
+  return (await response.json()) as SpotifyTokenResponse;
 }
 
-export async function refreshSpotifyAccessToken(): Promise<string> {
+export async function refreshSpotifyAccessToken(): Promise<SpotifyTokenResponse> {
   const response = await fetch(`${SPOTIFY_ACCOUNTS_BASE_URL}/api/token`, {
+    signal: AbortSignal.timeout(5000),
     method: "POST",
     headers: {
       Authorization: createSpotifyBasicAuthHeader(),
@@ -75,17 +84,13 @@ export async function refreshSpotifyAccessToken(): Promise<string> {
     }),
   });
 
+  checkResponse(response, "token refresh");
   const payload = (await response.json()) as SpotifyTokenResponse;
-
-  if (!response.ok || !payload.access_token) {
-    throw new Error(
-      `Spotify token refresh failed with ${response.status}: ${
-        payload.error_description ?? payload.error ?? "Unknown error"
-      }`,
-    );
+  if (!payload.access_token || !payload.expires_in) {
+    throw new SpotifyRequestError("token refresh", 401);
   }
+  return payload;
 
-  return payload.access_token;
 }
 
 export async function getSpotifyRecentlyPlayed(
@@ -94,23 +99,15 @@ export async function getSpotifyRecentlyPlayed(
   const response = await fetch(
     `${SPOTIFY_API_BASE_URL}/me/player/recently-played?limit=1`,
     {
+      signal: AbortSignal.timeout(5000),
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     },
   );
 
-  const payload = (await response.json()) as SpotifyRecentTrackResponse;
-
-  if (!response.ok) {
-    throw new Error(
-      `Spotify recent track request failed with ${response.status}: ${
-        payload.error?.message ?? "Unknown error"
-      }`,
-    );
-  }
-
-  return payload;
+  checkResponse(response, "recent track");
+  return (await response.json()) as SpotifyRecentTrackResponse;
 }
 
 export async function getSpotifyCurrentlyPlaying(
@@ -119,6 +116,7 @@ export async function getSpotifyCurrentlyPlaying(
   const response = await fetch(
     `${SPOTIFY_API_BASE_URL}/me/player/currently-playing`,
     {
+      signal: AbortSignal.timeout(5000),
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -129,19 +127,6 @@ export async function getSpotifyCurrentlyPlaying(
     return null;
   }
 
-  const payload = (await response.json()) as SpotifyCurrentlyPlayingResponse & {
-    error?: {
-      message?: string;
-    };
-  };
-
-  if (!response.ok) {
-    throw new Error(
-      `Spotify currently playing request failed with ${response.status}: ${
-        payload.error?.message ?? "Unknown error"
-      }`,
-    );
-  }
-
-  return payload;
+  checkResponse(response, "currently playing");
+  return (await response.json()) as SpotifyCurrentlyPlayingResponse;
 }

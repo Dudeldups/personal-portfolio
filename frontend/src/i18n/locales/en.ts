@@ -70,6 +70,8 @@ export const en = {
         privateRepoImageAlt: "Alright then, keep your secrets meme",
       },
       spotify: {
+        lastKnown: "Last known track",
+        unavailable: "Spotify status is temporarily unavailable.",
         title: "Spotify",
         subtitle: "Last played track",
         link: "Open in Spotify",

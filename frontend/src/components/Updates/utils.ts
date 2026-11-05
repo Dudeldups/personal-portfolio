@@ -16,6 +16,7 @@ export type SpotifyTrack = {
   url: string;
   playedAt?: string;
   isPlaying?: boolean;
+  stale?: boolean;
 };
 
 export type AsyncState<T> = {

@@ -1,9 +1,10 @@
 import { SPOTIFY_CACHE_TTL_MS } from "../../utils/assertEnv";
-import { createStaleWhileRevalidateCache } from "../../utils/createStaleWhileRevalidateCache";
+import { createSpotifyCache } from "./spotifyCache";
 import {
   getSpotifyCurrentlyPlaying,
   getSpotifyRecentlyPlayed,
   refreshSpotifyAccessToken,
+  SpotifyRequestError,
 } from "./api";
 import type {
   SpotifyCurrentlyPlayingResponse,
@@ -66,7 +67,7 @@ function mapSpotifyCurrentlyPlayingTrack(
 }
 
 async function loadRecentTrack(): Promise<SpotifyRecentTrack | null> {
-  const accessToken = await refreshSpotifyAccessToken();
+  const accessToken = await getAccessToken();
   const currentlyPlayingPayload = await getSpotifyCurrentlyPlaying(accessToken);
   const currentlyPlayingTrack =
     mapSpotifyCurrentlyPlayingTrack(currentlyPlayingPayload);
@@ -80,17 +81,30 @@ async function loadRecentTrack(): Promise<SpotifyRecentTrack | null> {
   return mapSpotifyRecentTrack(payload);
 }
 
-const recentTrackCache = createStaleWhileRevalidateCache<SpotifyRecentTrack | null>(
-  {
-    debugLabel: "Spotify recent track",
-    ttlMs: SPOTIFY_CACHE_TTL_MS,
-    load: loadRecentTrack,
+let token: { value: string; expiresAt: number } | null = null;
+
+async function getAccessToken(): Promise<string> {
+  if (token && token.expiresAt > Date.now()) return token.value;
+  const result = await refreshSpotifyAccessToken();
+  token = {
+    value: result.access_token!,
+    expiresAt: Date.now() + Math.max(0, (result.expires_in! - 60) * 1000),
+  };
+  return token.value;
+}
+
+const recentTrackCache = createSpotifyCache({
+  ttlMs: SPOTIFY_CACHE_TTL_MS,
+  load: async () => {
+    try {
+      return await loadRecentTrack();
+    } catch (error) {
+      if (error instanceof SpotifyRequestError && error.status === 401) token = null;
+      throw error;
+    }
   },
-);
+});
 
 export function getSpotifyRecentTrack(): Promise<SpotifyRecentTrack | null> {
   return recentTrackCache.get();
 }
-
-recentTrackCache.warm();
-recentTrackCache.startAutoRefresh();

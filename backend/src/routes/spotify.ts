@@ -51,8 +51,8 @@ spotifyRouter.get("/recent-track", async (_req, res) => {
     const recentTrack = await getSpotifyRecentTrack();
 
     if (!recentTrack) {
-      res.status(404).json({
-        message: "No recently played Spotify track found",
+      res.status(503).json({
+        message: "Spotify status temporarily unavailable",
       });
       return;
     }
