@@ -25,11 +25,14 @@ const SpotifyUpdateCard = () => {
       isLoading: false,
       error: parsedTrack ? null : "empty",
     }),
-    onError: () => setLatestTrack({
-      data: null,
+    // A temporary backend error must not erase a previously displayed track.
+    onError: () => setLatestTrack((previous) => ({
+      data: previous.data
+        ? { ...previous.data, isPlaying: false, stale: true }
+        : null,
       isLoading: false,
       error: "request-failed",
-    }),
+    })),
   }), []);
 
   const playbackLabel = latestTrack.data
@@ -37,7 +40,11 @@ const SpotifyUpdateCard = () => {
       ? latestTrack.data.playedAt
         ? t("updates.spotify.lastKnown") + " · " +
           formatRelativeDate(latestTrack.data.playedAt, i18n.language, t)
-        : t("updates.spotify.lastKnown")
+        : latestTrack.data.observedAt
+          ? t("updates.spotify.lastKnown") + " · " +
+            t("updates.spotify.observedAt") + " " +
+            formatRelativeDate(latestTrack.data.observedAt, i18n.language, t)
+          : t("updates.spotify.lastKnown")
       : latestTrack.data.isPlaying
         ? t("updates.spotify.nowPlaying")
         : latestTrack.data.playedAt
@@ -103,8 +110,11 @@ const SpotifyUpdateCard = () => {
             <footer className="mt-auto pt-8">
               <div className="flex items-center gap-2 text-sm text-light/70">
                 <FiClock className="size-4" />
-                {latestTrack.data.playedAt && !latestTrack.data.isPlaying ? (
-                  <time dateTime={latestTrack.data.playedAt}>{playbackLabel}</time>
+                {!latestTrack.data.isPlaying &&
+                  (latestTrack.data.playedAt || latestTrack.data.observedAt) ? (
+                  <time dateTime={latestTrack.data.playedAt ?? latestTrack.data.observedAt}>
+                    {playbackLabel}
+                  </time>
                 ) : (
                   <span>{playbackLabel}</span>
                 )}

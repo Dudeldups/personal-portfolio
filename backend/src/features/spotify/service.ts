@@ -1,5 +1,6 @@
 import { SPOTIFY_CACHE_TTL_MS } from "../../utils/assertEnv";
 import { createSpotifyCache, type SpotifyCacheResult } from "./spotifyCache";
+import { loadSpotifySnapshot, saveSpotifySnapshot } from "./spotifySnapshot";
 import {
   getSpotifyCurrentlyPlaying,
   getSpotifyRecentlyPlayed,
@@ -93,8 +94,12 @@ async function getAccessToken(): Promise<string> {
   return token.value;
 }
 
+const snapshotFile = process.env.SPOTIFY_LAST_KNOWN_FILE?.trim() || undefined;
+
 const recentTrackCache = createSpotifyCache({
   ttlMs: SPOTIFY_CACHE_TTL_MS,
+  initialLastKnown: loadSpotifySnapshot(snapshotFile),
+  onSuccessfulTrack: (snapshot) => saveSpotifySnapshot(snapshotFile, snapshot),
   load: async () => {
     try {
       return await loadRecentTrack();

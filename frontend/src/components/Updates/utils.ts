@@ -15,6 +15,7 @@ export type SpotifyTrack = {
   album?: string;
   url: string;
   playedAt?: string;
+  observedAt?: string;
   isPlaying?: boolean;
   stale?: boolean;
 };

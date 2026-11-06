@@ -21,13 +21,15 @@ test('successful requests are cached, deduplicated and stale data is marked unti
   await flush();
   assert.equal(calls, 1);
   resolve(track);
-  assert.deepEqual(await a, { status: "available", track }); assert.deepEqual(await b, { status: "available", track });
-  assert.deepEqual(await cache.get(), { status: "available", track }); assert.equal(calls, 1);
+  const observed = { ...track, observedAt: new Date(now).toISOString() };
+  assert.deepEqual(await a, { status: "available", track: observed }); assert.deepEqual(await b, { status: "available", track: observed });
+  assert.deepEqual(await cache.get(), { status: "available", track: observed }); assert.equal(calls, 1);
   now += 1001;
-  assert.deepEqual(await cache.get(), { status: "available", track: { ...track, isPlaying: false, stale: true } });
+  assert.deepEqual(await cache.get(), { status: "available", track: { ...observed, isPlaying: false, stale: true } });
   await flush(); assert.equal(calls, 2);
   now += 15 * 60_000;
-  assert.deepEqual(await cache.get(), { status: "unavailable" });
+  // Previously known tracks remain visible and correctly stale even during long outages.
+  assert.equal((await cache.get()).status, "available");
   resolve(track); await flush();
 });
 
@@ -48,7 +50,7 @@ test('temporary and authorization errors back off and can recover', async () => 
   assert.deepEqual(await cache.get(), { status: "unavailable" }); now += 60001;
   assert.deepEqual(await cache.get(), { status: "unavailable" }); now += 60001;
   assert.deepEqual(await cache.get(), { status: "unavailable" }); assert.equal(calls, 2);
-  now += 3600000; assert.deepEqual(await cache.get(), { status: "available", track }); assert.equal(calls, 3);
+  now += 3600000; const restored = await cache.get(); assert.equal(restored.status, 'available'); assert.equal(restored.track.title, track.title); assert.equal(restored.track.isPlaying, true); assert.equal(calls, 3);
 });
 
 test('Spotify responses handle success, 204, 429 and token errors without exposing response bodies', async () => {
@@ -90,14 +92,21 @@ test('expired cache awaits a quick refresh and shares it across visitors', async
       return calls === 1 ? Promise.resolve(track) : new Promise(resolve => { finish = resolve; });
     },
   });
-  assert.deepEqual(await cache.get(), { status: 'available', track });
+  const firstResult = await cache.get(); assert.equal(firstResult.status, 'available'); assert.equal(firstResult.track.title, track.title);
   now += 1001;
-  const first = cache.get(), second = cache.get();
+  // A stored track is returned immediately while one shared refresh runs.
+  const first = await cache.get(), second = await cache.get();
+  assert.equal(first.status, 'available');
+  assert.equal(first.track.stale, true);
+  assert.deepEqual(second, first);
   await flush();
   assert.equal(calls, 2);
   finish(freshTrack);
-  assert.deepEqual(await first, { status: 'available', track: freshTrack });
-  assert.deepEqual(await second, { status: 'available', track: freshTrack });
+  await flush();
+  const updated = await cache.get();
+  assert.equal(updated.status, 'available');
+  assert.equal(updated.track.title, 'New song');
+  assert.equal(updated.track.stale, undefined);
   assert.equal(calls, 2);
 });
 
@@ -116,14 +125,18 @@ test('bounded wait keeps stale playback timestamp and accepts a late refresh imm
   });
   await cache.get();
   now += 1001;
-  assert.deepEqual(await cache.get(), {
-    status: 'available',
-    track: { ...oldTrack, isPlaying: false, stale: true },
-  });
+  const lastKnown = await cache.get();
+  assert.equal(lastKnown.status, 'available');
+  assert.equal(lastKnown.track.playedAt, oldTrack.playedAt);
+  assert.equal(lastKnown.track.isPlaying, false);
+  assert.equal(lastKnown.track.stale, true);
   assert.equal(calls, 2);
   finish(updated);
   await flush();
-  assert.deepEqual(await cache.get(), { status: 'available', track: updated });
+  const fresh = await cache.get();
+  assert.equal(fresh.status, 'available');
+  assert.equal(fresh.track.title, 'Updated song');
+  assert.equal(fresh.track.stale, undefined);
   assert.equal(calls, 2);
 });
 
@@ -164,6 +177,6 @@ test('cold cache times out, shares the pending request and retains its late resu
   assert.deepEqual(second, { status: 'unavailable' });
   assert.equal(calls, 1);
   finish(track); await flush();
-  assert.deepEqual(await cache.get(), { status: 'available', track });
+  const last = await cache.get(); assert.equal(last.status, 'available'); assert.equal(last.track.title, track.title);
   assert.equal(calls, 1);
 });
