@@ -85,6 +85,11 @@ before returning a stale fallback or temporary-unavailable response; a later
 completed refresh is available to the next browser request. Access tokens are
 reused until shortly before expiry, and Spotify calls individually time out after
 five seconds. No requests are made to Spotify while the site is idle.
+A Spotify change can remain unseen for up to one cache TTL plus one browser poll
+interval (normally about 150 seconds), plus request latency and scheduling delays.
+On failure the last successful track can instead be returned as stale until TTL plus
+15 minutes after its fetch; the browser may retain the last response until its next
+poll. Hidden tabs refresh on becoming visible.
 
 On a 429, the backend honors `Retry-After` and applies exponential backoff (one
 minute initially, up to 30 minutes, or longer if Spotify requests it). Network and

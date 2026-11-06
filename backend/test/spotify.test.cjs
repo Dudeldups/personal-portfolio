@@ -152,3 +152,18 @@ test('429 cooldown returns a timestamped stale fallback without extra upstream a
   await cache.get();
   assert.equal(calls, 2);
 });
+
+test('cold cache times out, shares the pending request and retains its late result', async () => {
+  let calls = 0, finish;
+  const cache = createSpotifyCache({
+    ttlMs: 60000, refreshWaitMs: 10,
+    load: () => { calls++; return new Promise(resolve => { finish = resolve; }); },
+  });
+  const [first, second] = await Promise.all([cache.get(), cache.get()]);
+  assert.deepEqual(first, { status: 'unavailable' });
+  assert.deepEqual(second, { status: 'unavailable' });
+  assert.equal(calls, 1);
+  finish(track); await flush();
+  assert.deepEqual(await cache.get(), { status: 'available', track });
+  assert.equal(calls, 1);
+});
