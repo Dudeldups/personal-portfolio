@@ -16,7 +16,7 @@ const flush = () => new Promise(resolve => setImmediate(resolve));
 test('successful requests are cached, deduplicated and stale data is marked until it expires', async () => {
   let now = 100000, calls = 0, resolve;
   Date.now = () => now;
-  const cache = createSpotifyCache({ ttlMs: 1000, load: () => { calls++; return new Promise(r => { resolve = r; }); } });
+  const cache = createSpotifyCache({ ttlMs: 1000, refreshWaitMs: 10, load: () => { calls++; return new Promise(r => { resolve = r; }); } });
   const a = cache.get(), b = cache.get();
   await flush();
   assert.equal(calls, 1);
@@ -67,7 +67,7 @@ test('successful empty results are cached and become unavailable when stale', as
   let now = 100000, calls = 0;
   Date.now = () => now;
   let resolve;
-  const cache = createSpotifyCache({ ttlMs: 1000, load: () => { calls++; return calls === 1 ? Promise.resolve(null) : new Promise(r => { resolve = r; }); } });
+  const cache = createSpotifyCache({ ttlMs: 1000, refreshWaitMs: 10, load: () => { calls++; return calls === 1 ? Promise.resolve(null) : new Promise(r => { resolve = r; }); } });
   assert.deepEqual(await cache.get(), { status: 'empty' });
   assert.deepEqual(await cache.get(), { status: 'empty' });
   assert.equal(calls, 1);
@@ -76,4 +76,79 @@ test('successful empty results are cached and become unavailable when stale', as
   await flush();
   resolve(null); await flush();
   assert.deepEqual(await cache.get(), { status: 'empty' });
+});
+
+
+test('expired cache awaits a quick refresh and shares it across visitors', async () => {
+  let now = 100000, calls = 0, finish;
+  Date.now = () => now;
+  const freshTrack = { ...track, title: 'New song', playedAt: '2026-11-06T18:00:00Z', isPlaying: false };
+  const cache = createSpotifyCache({
+    ttlMs: 1000,
+    load: () => {
+      calls++;
+      return calls === 1 ? Promise.resolve(track) : new Promise(resolve => { finish = resolve; });
+    },
+  });
+  assert.deepEqual(await cache.get(), { status: 'available', track });
+  now += 1001;
+  const first = cache.get(), second = cache.get();
+  await flush();
+  assert.equal(calls, 2);
+  finish(freshTrack);
+  assert.deepEqual(await first, { status: 'available', track: freshTrack });
+  assert.deepEqual(await second, { status: 'available', track: freshTrack });
+  assert.equal(calls, 2);
+});
+
+test('bounded wait keeps stale playback timestamp and accepts a late refresh immediately', async () => {
+  let now = 100000, calls = 0, finish;
+  Date.now = () => now;
+  const oldTrack = { ...track, playedAt: '2026-11-06T17:00:00Z' };
+  const updated = { ...oldTrack, title: 'Updated song', playedAt: '2026-11-06T18:00:00Z' };
+  const cache = createSpotifyCache({
+    ttlMs: 1000,
+    refreshWaitMs: 10,
+    load: () => {
+      calls++;
+      return calls === 1 ? Promise.resolve(oldTrack) : new Promise(resolve => { finish = resolve; });
+    },
+  });
+  await cache.get();
+  now += 1001;
+  assert.deepEqual(await cache.get(), {
+    status: 'available',
+    track: { ...oldTrack, isPlaying: false, stale: true },
+  });
+  assert.equal(calls, 2);
+  finish(updated);
+  await flush();
+  assert.deepEqual(await cache.get(), { status: 'available', track: updated });
+  assert.equal(calls, 2);
+});
+
+test('429 cooldown returns a timestamped stale fallback without extra upstream attempts', async () => {
+  let now = 100000, calls = 0;
+  Date.now = () => now;
+  console.warn = () => {};
+  const oldTrack = { ...track, playedAt: '2026-11-06T17:00:00Z' };
+  const cache = createSpotifyCache({
+    ttlMs: 1000,
+    load: async () => {
+      calls++;
+      if (calls === 1) return oldTrack;
+      throw new SpotifyRequestError('currently playing', 429, 300000);
+    },
+  });
+  await cache.get();
+  now += 1001;
+  assert.deepEqual(await cache.get(), {
+    status: 'available',
+    track: { ...oldTrack, isPlaying: false, stale: true },
+  });
+  for (let i = 0; i < 5; i++) await cache.get();
+  assert.equal(calls, 2);
+  now += 299999;
+  await cache.get();
+  assert.equal(calls, 2);
 });

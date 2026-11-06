@@ -11,7 +11,9 @@ import {
   type SpotifyTrack,
 } from "./utils";
 
-const REFRESH_INTERVAL_MS = 120_000;
+// Browser requests use our own cached backend; they do not directly poll Spotify.
+const POLL_INTERVAL_MS = 30_000;
+const RETRY_INTERVAL_MS = 10_000;
 
 const SpotifyUpdateCard = () => {
   const { t, i18n } = useTranslation();
@@ -20,40 +22,83 @@ const SpotifyUpdateCard = () => {
   );
 
   useEffect(() => {
-    const controller = new AbortController();
+    let disposed = false;
+    let timeoutId: number | undefined;
+    let currentController: AbortController | null = null;
+
+    function schedule(delay: number) {
+      window.clearTimeout(timeoutId);
+      if (!disposed && !document.hidden) {
+        timeoutId = window.setTimeout(() => void loadSpotifyTrack(), delay);
+      }
+    }
 
     async function loadSpotifyTrack() {
+      if (disposed || document.hidden || currentController) return;
+
+      const controller = new AbortController();
+      currentController = controller;
+      let nextDelay = POLL_INTERVAL_MS;
+
       try {
         const parsedTrack = await getRecentSpotifyTrack(controller.signal);
+        if (disposed || controller.signal.aborted) return;
 
         setLatestTrack({
           data: parsedTrack,
           isLoading: false,
           error: parsedTrack ? null : "empty",
         });
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
+      } catch {
+        if (disposed || controller.signal.aborted) return;
 
+        nextDelay = RETRY_INTERVAL_MS;
         setLatestTrack({
           data: null,
           isLoading: false,
           error: "request-failed",
         });
+      } finally {
+        if (currentController === controller) currentController = null;
+        if (!disposed) schedule(controller.signal.aborted ? 0 : nextDelay);
       }
     }
 
-    void loadSpotifyTrack();
-    const refreshInterval = window.setInterval(() => {
-      void loadSpotifyTrack();
-    }, REFRESH_INTERVAL_MS);
+    function handleVisibilityChange() {
+      window.clearTimeout(timeoutId);
+      if (document.hidden) {
+        currentController?.abort();
+      } else if (currentController) {
+        // Do not overlap a request that is still settling after an abort.
+        schedule(1_000);
+      } else {
+        void loadSpotifyTrack();
+      }
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    if (!document.hidden) void loadSpotifyTrack();
 
     return () => {
-      window.clearInterval(refreshInterval);
-      controller.abort();
+      disposed = true;
+      window.clearTimeout(timeoutId);
+      currentController?.abort();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
+
+  const playbackLabel = latestTrack.data
+    ? latestTrack.data.stale
+      ? latestTrack.data.playedAt
+        ? t("updates.spotify.lastKnown") + " · " +
+          formatRelativeDate(latestTrack.data.playedAt, i18n.language, t)
+        : t("updates.spotify.lastKnown")
+      : latestTrack.data.isPlaying
+        ? t("updates.spotify.nowPlaying")
+        : latestTrack.data.playedAt
+          ? formatRelativeDate(latestTrack.data.playedAt, i18n.language, t)
+          : t("updates.spotify.recentlyPlayed")
+    : null;
 
   const TRACK_TRANSITION = {
     duration: 0.35,
@@ -113,23 +158,11 @@ const SpotifyUpdateCard = () => {
             <footer className="mt-auto pt-8">
               <div className="flex items-center gap-2 text-sm text-light/70">
                 <FiClock className="size-4" />
-                <time
-                  dateTime={
-                    latestTrack.data.playedAt ?? new Date().toISOString()
-                  }
-                >
-                  {latestTrack.data.stale
-                    ? t("updates.spotify.lastKnown")
-                    : latestTrack.data.isPlaying
-                    ? t("updates.spotify.nowPlaying")
-                    : latestTrack.data.playedAt
-                      ? formatRelativeDate(
-                          latestTrack.data.playedAt,
-                          i18n.language,
-                          t,
-                        )
-                      : t("updates.spotify.recentlyPlayed")}
-                </time>
+                {latestTrack.data.playedAt && !latestTrack.data.isPlaying ? (
+                  <time dateTime={latestTrack.data.playedAt}>{playbackLabel}</time>
+                ) : (
+                  <span>{playbackLabel}</span>
+                )}
               </div>
 
               <a
