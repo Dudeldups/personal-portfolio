@@ -12,6 +12,6 @@
     "start": "concurrently -n frontend,backend -c cyan,green \"npm run preview --workspace frontend -- --host 0.0.0.0\" \"npm run start --workspace backend\""
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "9.2.5"
   }
 }
