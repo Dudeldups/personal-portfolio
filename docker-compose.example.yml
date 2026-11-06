@@ -11,3 +11,10 @@ services:
       - "4000:4000"
     env_file:
       - ./backend/.env
+    environment:
+      SPOTIFY_LAST_KNOWN_FILE: /app/data/spotify-last-known.json
+    volumes:
+      - spotify-last-known:/app/data
+
+volumes:
+  spotify-last-known:

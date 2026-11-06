@@ -1,8 +1,7 @@
 import { SpotifyRequestError } from "./api";
+import type { SpotifySnapshot } from "./spotifySnapshot";
 import type { SpotifyRecentTrack } from "./types";
 
-// Cache metadata is short-lived; stale playback must never appear live.
-const MAX_STALE_MS = 15 * 60_000;
 const MAX_BACKOFF_MS = 30 * 60_000;
 const AUTH_BACKOFF_MS = 60 * 60_000;
 const DEFAULT_REFRESH_WAIT_MS = 8_000;
@@ -15,16 +14,22 @@ export type SpotifyCacheResult =
 type Options = {
   ttlMs: number;
   load: () => Promise<SpotifyRecentTrack | null>;
-  // Override the bounded wait in tests without waiting eight real seconds.
   refreshWaitMs?: number;
+  initialLastKnown?: SpotifySnapshot | null;
+  onSuccessfulTrack?: (snapshot: SpotifySnapshot) => void;
 };
 
 export function createSpotifyCache({
   ttlMs,
   load,
   refreshWaitMs = DEFAULT_REFRESH_WAIT_MS,
+  initialLastKnown = null,
+  onSuccessfulTrack,
 }: Options) {
+  // Fresh response state controls Spotify TTL; lastKnown is a separate,
+  // never-live fallback that can survive container recreation.
   let entry: { value: SpotifyRecentTrack | null; fetchedAt: number } | null = null;
+  let lastKnown: SpotifySnapshot | null = initialLastKnown;
   let inFlight: Promise<void> | null = null;
   let nextAttempt = 0;
   let failures = 0;
@@ -36,10 +41,26 @@ export function createSpotifyCache({
     inFlight = Promise.resolve()
       .then(load)
       .then((value) => {
-        entry = { value, fetchedAt: Date.now() };
+        const fetchedAt = Date.now();
+        const observed = value
+          ? { ...value, observedAt: new Date(fetchedAt).toISOString() }
+          : null;
+        entry = { value: observed, fetchedAt };
+        if (observed) {
+          lastKnown = {
+            track: { ...observed, isPlaying: false, stale: true },
+            fetchedAt,
+          };
+          try {
+            onSuccessfulTrack?.(lastKnown);
+          } catch {
+            // Persistence must never turn a successful Spotify response into a 503.
+            console.warn("Spotify last-known snapshot update failed");
+          }
+        }
         if (failures) console.info("Spotify refresh recovered");
         failures = 0;
-        nextAttempt = Date.now() + ttlMs;
+        nextAttempt = fetchedAt + ttlMs;
       })
       .catch((error: unknown) => {
         failures++;
@@ -60,7 +81,6 @@ export function createSpotifyCache({
           : auth
             ? "authorization or access failure; check credentials, scopes and quota mode"
             : "temporary failure";
-        // Never log request headers, Spotify response bodies or credentials.
         console.warn(
           "Spotify " + kind +
           " (operation=" + (error instanceof SpotifyRequestError ? error.operation : "network") +
@@ -77,8 +97,6 @@ export function createSpotifyCache({
   }
 
   async function waitForRefresh(pending: Promise<void>): Promise<void> {
-    // A slow Spotify API must not keep a visitor's HTTP request open indefinitely.
-    // The late result is still cached for subsequent requests.
     await new Promise<void>((resolve) => {
       const timer = setTimeout(resolve, Math.max(0, refreshWaitMs));
       void pending.then(() => {
@@ -88,29 +106,36 @@ export function createSpotifyCache({
     });
   }
 
-  async function get(): Promise<SpotifyCacheResult> {
-    const now = Date.now();
-    if (!entry || now >= entry.fetchedAt + ttlMs) {
-      const pending = refresh();
-      if (pending) await waitForRefresh(pending);
-    }
-
-    const checkedAt = Date.now();
-    if (!entry || checkedAt >= entry.fetchedAt + ttlMs + MAX_STALE_MS) {
-      if (entry) entry = null;
-      return { status: "unavailable" };
-    }
-    if (!entry.value) {
-      return checkedAt >= entry.fetchedAt + ttlMs
-        ? { status: "unavailable" }
-        : { status: "empty" };
-    }
+  function availableLastKnown(): SpotifyCacheResult | null {
+    if (!lastKnown) return null;
     return {
       status: "available",
-      track: checkedAt >= entry.fetchedAt + ttlMs
-        ? { ...entry.value, isPlaying: false, stale: true }
-        : entry.value,
+      track: { ...lastKnown.track, isPlaying: false, stale: true },
     };
+  }
+
+  function currentResult(): SpotifyCacheResult | null {
+    if (!entry || Date.now() >= entry.fetchedAt + ttlMs) return null;
+    if (!entry.value) {
+      return availableLastKnown() ?? { status: "empty" };
+    }
+    return { status: "available", track: entry.value };
+  }
+
+  async function get(): Promise<SpotifyCacheResult> {
+    const fresh = currentResult();
+    if (fresh) return fresh;
+
+    const pending = refresh();
+    // Show a known, timestamped snapshot immediately, while the refresh runs.
+    // Waiting for Spotify here would cause the exact blank/error first impression
+    // that the persistent fallback is designed to avoid.
+    const fallback = availableLastKnown();
+    if (fallback) return fallback;
+
+    // Before the very first successful fetch there is no factual track to show.
+    if (pending) await waitForRefresh(pending);
+    return currentResult() ?? availableLastKnown() ?? { status: "unavailable" };
   }
 
   return { get };

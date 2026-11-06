@@ -72,6 +72,7 @@ export const en = {
       spotify: {
         empty: "No recently played track available.",
         lastKnown: "Last known track",
+        observedAt: "Stand as of",
         unavailable: "Spotify status is temporarily unavailable.",
         title: "Spotify",
         subtitle: "Last played track",

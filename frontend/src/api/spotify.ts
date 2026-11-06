@@ -7,6 +7,7 @@ type RecentSpotifyTrackResponse = {
   album?: string;
   url?: string;
   playedAt?: string;
+  observedAt?: string;
   isPlaying?: boolean;
   stale?: boolean;
 };
@@ -17,6 +18,7 @@ export type RecentSpotifyTrack = {
   album?: string;
   url: string;
   playedAt?: string;
+  observedAt?: string;
   isPlaying?: boolean;
   stale?: boolean;
 };
@@ -38,6 +40,7 @@ function parseRecentSpotifyTrack(
     album: payload.album,
     url: payload.url,
     playedAt: payload.playedAt,
+    observedAt: payload.observedAt,
     isPlaying: payload.isPlaying,
     stale: payload.stale,
   };
