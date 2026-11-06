@@ -76,12 +76,20 @@ docker compose up -d
 ## Spotify operation
 
 The Spotify card refreshes on demand, at most once per `SPOTIFY_CACHE_TTL_MS`
-(default 120 seconds) per backend process. Browser polling is every 120 seconds;
-there is no idle background poll. Concurrent requests share one refresh. An access
- token is reused until shortly before expiry. A refresh first checks current playback
-and only queries recently played if necessary. The first request after a cold start
-waits for that refresh; Spotify calls time out after five seconds each and do not
-block the rest of the website.
+(default 120 seconds) per backend process. Visible browser tabs check the
+local backend every 30 seconds, or retry after 10 seconds if an HTTP request fails.
+Tabs check again immediately on becoming visible. These checks do not make extra
+Spotify API calls while its cache or a Retry-After cooldown is active. Concurrent
+visitors share one refresh. An expired cache waits up to eight seconds for Spotify
+before returning a stale fallback or temporary-unavailable response; a later
+completed refresh is available to the next browser request. Access tokens are
+reused until shortly before expiry, and Spotify calls individually time out after
+five seconds. No requests are made to Spotify while the site is idle.
+A Spotify change can remain unseen for up to one cache TTL plus one browser poll
+interval (normally about 150 seconds), plus request latency and scheduling delays.
+On failure the last successful track can instead be returned as stale until TTL plus
+15 minutes after its fetch; the browser may retain the last response until its next
+poll. Hidden tabs refresh on becoming visible.
 
 On a 429, the backend honors `Retry-After` and applies exponential backoff (one
 minute initially, up to 30 minutes, or longer if Spotify requests it). Network and
@@ -90,8 +98,8 @@ server failures use the same bounded backoff. Authentication and access errors
 credentials, scopes, app access and quota mode if they persist. Failures are logged
 once per attempted refresh with status, operation, next attempt and failure count;
 recovery is logged once. No tokens or response bodies are logged. Cache entries are
-in memory only; expired data is marked as last known and discarded after 15 more
-minutes. A successful empty listening history returns HTTP 200 with `{"status":"empty"}` and displays a neutral empty-history message. If the cache is unavailable, the route returns HTTP 503 and the card displays a temporary-unavailability message.
+in memory only; expired data is marked as last known, retains its actual played-at timestamp
+when available, and is discarded after 15 more minutes. A successful empty listening history returns HTTP 200 with `{"status":"empty"}` and displays a neutral empty-history message. If the cache is unavailable, the route returns HTTP 503 and the card displays a temporary-unavailability message.
 
 The previous implementation refreshed every minute even without visitors, obtained
 a new access token each time, ignored `Retry-After`, and allowed each stale-cache

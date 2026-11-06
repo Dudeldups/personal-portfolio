@@ -53,8 +53,7 @@ test('route distinguishes rate limiting, empty results and tracks; tokens and re
   assert.deepEqual(await request(), { status: 200, body: { status: 'empty' } });
   assert.equal(recentCalls, 1);
   now += 1001; mode = 'playing';
-  assert.deepEqual(await request(), first); // stale empty state while refresh runs
-  await flush();
+  // A visitor waits for the quick Spotify refresh, rather than seeing stale 503.
   const playing = await request();
   assert.equal(playing.status, 200); assert.equal(playing.body.title, 'Song');
   assert.equal(playing.body.isPlaying, true); assert.equal(tokenCalls, 1);

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { FiClock } from "react-icons/fi";
 import { FaSpotify } from "react-icons/fa6";
 import { getRecentSpotifyTrack } from "../../api/spotify";
+import { startSpotifyPolling } from "./spotifyPolling";
 import {
   formatRelativeDate,
   initialState,
@@ -11,49 +12,38 @@ import {
   type SpotifyTrack,
 } from "./utils";
 
-const REFRESH_INTERVAL_MS = 120_000;
-
 const SpotifyUpdateCard = () => {
   const { t, i18n } = useTranslation();
   const [latestTrack, setLatestTrack] = useState<AsyncState<SpotifyTrack>>(() =>
     initialState<SpotifyTrack>(),
   );
 
-  useEffect(() => {
-    const controller = new AbortController();
+  useEffect(() => startSpotifyPolling({
+    load: getRecentSpotifyTrack,
+    onSuccess: (parsedTrack) => setLatestTrack({
+      data: parsedTrack,
+      isLoading: false,
+      error: parsedTrack ? null : "empty",
+    }),
+    onError: () => setLatestTrack({
+      data: null,
+      isLoading: false,
+      error: "request-failed",
+    }),
+  }), []);
 
-    async function loadSpotifyTrack() {
-      try {
-        const parsedTrack = await getRecentSpotifyTrack(controller.signal);
-
-        setLatestTrack({
-          data: parsedTrack,
-          isLoading: false,
-          error: parsedTrack ? null : "empty",
-        });
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
-
-        setLatestTrack({
-          data: null,
-          isLoading: false,
-          error: "request-failed",
-        });
-      }
-    }
-
-    void loadSpotifyTrack();
-    const refreshInterval = window.setInterval(() => {
-      void loadSpotifyTrack();
-    }, REFRESH_INTERVAL_MS);
-
-    return () => {
-      window.clearInterval(refreshInterval);
-      controller.abort();
-    };
-  }, []);
+  const playbackLabel = latestTrack.data
+    ? latestTrack.data.stale
+      ? latestTrack.data.playedAt
+        ? t("updates.spotify.lastKnown") + " · " +
+          formatRelativeDate(latestTrack.data.playedAt, i18n.language, t)
+        : t("updates.spotify.lastKnown")
+      : latestTrack.data.isPlaying
+        ? t("updates.spotify.nowPlaying")
+        : latestTrack.data.playedAt
+          ? formatRelativeDate(latestTrack.data.playedAt, i18n.language, t)
+          : t("updates.spotify.recentlyPlayed")
+    : null;
 
   const TRACK_TRANSITION = {
     duration: 0.35,
@@ -113,23 +103,11 @@ const SpotifyUpdateCard = () => {
             <footer className="mt-auto pt-8">
               <div className="flex items-center gap-2 text-sm text-light/70">
                 <FiClock className="size-4" />
-                <time
-                  dateTime={
-                    latestTrack.data.playedAt ?? new Date().toISOString()
-                  }
-                >
-                  {latestTrack.data.stale
-                    ? t("updates.spotify.lastKnown")
-                    : latestTrack.data.isPlaying
-                    ? t("updates.spotify.nowPlaying")
-                    : latestTrack.data.playedAt
-                      ? formatRelativeDate(
-                          latestTrack.data.playedAt,
-                          i18n.language,
-                          t,
-                        )
-                      : t("updates.spotify.recentlyPlayed")}
-                </time>
+                {latestTrack.data.playedAt && !latestTrack.data.isPlaying ? (
+                  <time dateTime={latestTrack.data.playedAt}>{playbackLabel}</time>
+                ) : (
+                  <span>{playbackLabel}</span>
+                )}
               </div>
 
               <a
