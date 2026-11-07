@@ -1,6 +1,6 @@
 import { SPOTIFY_CACHE_TTL_MS } from "../../utils/assertEnv";
 import { createSpotifyCache, type SpotifyCacheResult } from "./spotifyCache";
-import { loadSpotifySnapshot, saveSpotifySnapshot } from "./spotifySnapshot";
+import { loadSpotifySnapshot, saveSpotifySnapshot, isSpotifyTrackUrl, MAX_SNAPSHOT_AGE_MS, type SpotifySnapshot } from "./spotifySnapshot";
 import {
   getSpotifyCurrentlyPlaying,
   getSpotifyRecentlyPlayed,
@@ -21,7 +21,7 @@ function mapSpotifyRecentTrack(
 
   if (
     !track?.name ||
-    !track.external_urls?.spotify ||
+    !isSpotifyTrackUrl(track.external_urls?.spotify) ||
     !Array.isArray(track.artists)
   ) {
     return null;
@@ -49,7 +49,7 @@ function mapSpotifyCurrentlyPlayingTrack(
     !payload?.is_playing ||
     payload.currently_playing_type !== "track" ||
     !track?.name ||
-    !track.external_urls?.spotify ||
+    !isSpotifyTrackUrl(track.external_urls?.spotify) ||
     !Array.isArray(track.artists)
   ) {
     return null;
@@ -96,10 +96,27 @@ async function getAccessToken(): Promise<string> {
 
 const snapshotFile = process.env.SPOTIFY_LAST_KNOWN_FILE?.trim() || undefined;
 
+const initialSnapshot = loadSpotifySnapshot(snapshotFile);
+let expiryTimer: NodeJS.Timeout | undefined;
+function scheduleSnapshotExpiry(snapshot: SpotifySnapshot) {
+  if (!snapshotFile) return;
+  if (expiryTimer) clearTimeout(expiryTimer);
+  expiryTimer = setTimeout(() => {
+    const existing = loadSpotifySnapshot(snapshotFile);
+    if (existing) scheduleSnapshotExpiry(existing);
+  },
+    Math.max(1, snapshot.fetchedAt + MAX_SNAPSHOT_AGE_MS - Date.now()));
+  expiryTimer.unref();
+}
+if (initialSnapshot) scheduleSnapshotExpiry(initialSnapshot);
+
 const recentTrackCache = createSpotifyCache({
   ttlMs: SPOTIFY_CACHE_TTL_MS,
-  initialLastKnown: loadSpotifySnapshot(snapshotFile),
-  onSuccessfulTrack: (snapshot) => saveSpotifySnapshot(snapshotFile, snapshot),
+  initialLastKnown: initialSnapshot,
+  onSuccessfulTrack: (snapshot) => {
+    saveSpotifySnapshot(snapshotFile, snapshot);
+    scheduleSnapshotExpiry(snapshot);
+  },
   load: async () => {
     try {
       return await loadRecentTrack();

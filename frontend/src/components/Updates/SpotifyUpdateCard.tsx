@@ -27,7 +27,8 @@ const SpotifyUpdateCard = () => {
     }),
     // A temporary backend error must not erase a previously displayed track.
     onError: () => setLatestTrack((previous) => ({
-      data: previous.data
+      data: previous.data?.observedAt &&
+        Date.now() - Date.parse(previous.data.observedAt) < 24 * 60 * 60_000
         ? { ...previous.data, isPlaying: false, stale: true }
         : null,
       isLoading: false,

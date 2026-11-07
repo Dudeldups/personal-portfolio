@@ -1,5 +1,5 @@
 import { SpotifyRequestError } from "./api";
-import type { SpotifySnapshot } from "./spotifySnapshot";
+import { MAX_SNAPSHOT_AGE_MS, type SpotifySnapshot } from "./spotifySnapshot";
 import type { SpotifyRecentTrack } from "./types";
 
 const MAX_BACKOFF_MS = 30 * 60_000;
@@ -27,7 +27,7 @@ export function createSpotifyCache({
   onSuccessfulTrack,
 }: Options) {
   // Fresh response state controls Spotify TTL; lastKnown is a separate,
-  // never-live fallback that can survive container recreation.
+  // never-live, time-limited fallback that can survive container recreation.
   let entry: { value: SpotifyRecentTrack | null; fetchedAt: number } | null = null;
   let lastKnown: SpotifySnapshot | null = initialLastKnown;
   let inFlight: Promise<void> | null = null;
@@ -60,7 +60,7 @@ export function createSpotifyCache({
         }
         if (failures) console.info("Spotify refresh recovered");
         failures = 0;
-        nextAttempt = fetchedAt + ttlMs;
+        nextAttempt = fetchedAt + Math.min(ttlMs, MAX_SNAPSHOT_AGE_MS);
       })
       .catch((error: unknown) => {
         failures++;
@@ -108,6 +108,10 @@ export function createSpotifyCache({
 
   function availableLastKnown(): SpotifyCacheResult | null {
     if (!lastKnown) return null;
+    if (Date.now() - lastKnown.fetchedAt >= MAX_SNAPSHOT_AGE_MS) {
+      lastKnown = null;
+      return null;
+    }
     return {
       status: "available",
       track: { ...lastKnown.track, isPlaying: false, stale: true },
@@ -115,7 +119,7 @@ export function createSpotifyCache({
   }
 
   function currentResult(): SpotifyCacheResult | null {
-    if (!entry || Date.now() >= entry.fetchedAt + ttlMs) return null;
+    if (!entry || Date.now() >= entry.fetchedAt + Math.min(ttlMs, MAX_SNAPSHOT_AGE_MS)) return null;
     if (!entry.value) {
       return availableLastKnown() ?? { status: "empty" };
     }

@@ -76,7 +76,7 @@ test('a successful refresh persists a snapshot and survives simulated container 
 
 test('a last-known snapshot remains usable long after normal cache expiry', async () => {
   const filename = file();
-  const veryOld = Date.now() - 7 * 24 * 3600000;
+  const veryOld = Date.now() - 60 * 60_000;
   saveSpotifySnapshot(filename, { track, fetchedAt: veryOld });
   let resolve;
   const recovered = createSpotifyCache({
@@ -127,4 +127,62 @@ test('invalid, corrupted or non-Spotify snapshots cannot become public track lin
   } finally {
     console.warn = previousWarn;
   }
+});
+
+test('expired snapshots are deleted and not served; a recent snapshot is still usable', () => {
+  const filename = file();
+  mkdirSync(dirname(filename), { recursive: true });
+  writeFileSync(filename, JSON.stringify({ version: 1, fetchedAt: Date.now() - 24 * 60 * 60_000, track }));
+  assert.equal(loadSpotifySnapshot(filename), null);
+  assert.equal(require('node:fs').existsSync(filename), false);
+  saveSpotifySnapshot(filename, { track, fetchedAt: Date.now() });
+  assert.ok(loadSpotifySnapshot(filename));
+});
+
+test('snapshots reject credential-bearing and nonstandard-port URLs and do not serialize extra fields', () => {
+  const filename = file();
+  const warn = console.warn; console.warn = () => {};
+  try {
+    for (const url of ['https://user:pass@open.spotify.com/track/123', 'https://open.spotify.com:8443/track/123']) {
+      saveSpotifySnapshot(filename, { track: { ...track, url }, fetchedAt: Date.now() });
+      assert.equal(loadSpotifySnapshot(filename), null);
+    }
+    saveSpotifySnapshot(filename, { track: { ...track, secret: 'do-not-save' }, fetchedAt: Date.now() });
+    assert.doesNotMatch(readFileSync(filename, 'utf8'), /do-not-save/);
+  } finally { console.warn = warn; }
+});
+
+test('expired in-memory last-known data does not survive indefinitely', async () => {
+  const cache = createSpotifyCache({
+    ttlMs: 1000, refreshWaitMs: 1,
+    initialLastKnown: { track, fetchedAt: Date.now() - 24 * 60 * 60_000 },
+    load: async () => { throw new Error('offline'); },
+  });
+  const warn = console.warn; console.warn = () => {};
+  try { assert.deepEqual(await cache.get(), { status: 'unavailable' }); }
+  finally { console.warn = warn; }
+});
+
+test('successful empty Spotify response retains a prior track only as stale', async () => {
+  const cache = createSpotifyCache({ ttlMs: 1000, initialLastKnown: { track, fetchedAt: Date.now() }, load: async () => null });
+  const first = await cache.get(); assert.equal(first.status, 'available'); assert.equal(first.track.stale, true);
+  await flush();
+  const second = await cache.get(); assert.equal(second.status, 'available'); assert.equal(second.track.stale, true); assert.equal(second.track.isPlaying, false);
+});
+
+test('oversized and corrupt snapshot files are ignored', () => {
+  const filename = file(); mkdirSync(dirname(filename), { recursive: true });
+  const warn = console.warn; console.warn = () => {};
+  try { writeFileSync(filename, 'x'.repeat(17000)); assert.equal(loadSpotifySnapshot(filename), null); }
+  finally { console.warn = warn; }
+});
+
+test('failed writes do not overwrite a previously valid snapshot', () => {
+  const filename = file();
+  saveSpotifySnapshot(filename, { track, fetchedAt: Date.now() });
+  const before = readFileSync(filename, 'utf8');
+  const warn = console.warn; console.warn = () => {};
+  try { saveSpotifySnapshot(filename, { track: { ...track, url: 'https://invalid.example/track/1' }, fetchedAt: Date.now() }); }
+  finally { console.warn = warn; }
+  assert.equal(readFileSync(filename, 'utf8'), before);
 });

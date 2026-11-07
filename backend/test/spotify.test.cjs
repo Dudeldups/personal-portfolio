@@ -157,7 +157,7 @@ test('429 cooldown returns a timestamped stale fallback without extra upstream a
   now += 1001;
   assert.deepEqual(await cache.get(), {
     status: 'available',
-    track: { ...oldTrack, isPlaying: false, stale: true },
+    track: { ...oldTrack, observedAt: new Date(100000).toISOString(), isPlaying: false, stale: true },
   });
   for (let i = 0; i < 5; i++) await cache.get();
   assert.equal(calls, 2);
