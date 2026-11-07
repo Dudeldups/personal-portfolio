@@ -37,19 +37,12 @@ const SpotifyUpdateCard = () => {
   }), []);
 
   const playbackLabel = latestTrack.data
-    ? latestTrack.data.stale
-      ? latestTrack.data.playedAt
-        ? t("updates.spotify.lastKnown") + " · " +
-          formatRelativeDate(latestTrack.data.playedAt, i18n.language, t)
+    ? latestTrack.data.isPlaying && !latestTrack.data.stale
+      ? t("updates.spotify.nowPlaying")
+      : latestTrack.data.playedAt
+        ? formatRelativeDate(latestTrack.data.playedAt, i18n.language, t)
         : latestTrack.data.observedAt
-          ? t("updates.spotify.lastKnown") + " · " +
-            t("updates.spotify.observedAt") + " " +
-            formatRelativeDate(latestTrack.data.observedAt, i18n.language, t)
-          : t("updates.spotify.lastKnown")
-      : latestTrack.data.isPlaying
-        ? t("updates.spotify.nowPlaying")
-        : latestTrack.data.playedAt
-          ? formatRelativeDate(latestTrack.data.playedAt, i18n.language, t)
+          ? formatRelativeDate(latestTrack.data.observedAt, i18n.language, t)
           : t("updates.spotify.recentlyPlayed")
     : null;
 
