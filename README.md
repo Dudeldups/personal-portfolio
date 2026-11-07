@@ -80,16 +80,18 @@ The Spotify card refreshes on demand, at most once per `SPOTIFY_CACHE_TTL_MS`
 local backend every 30 seconds, or retry after 10 seconds if an HTTP request fails.
 Tabs check again immediately on becoming visible. These checks do not make extra
 Spotify API calls while its cache or a Retry-After cooldown is active. Concurrent
-visitors share one refresh. An expired cache waits up to eight seconds for Spotify
-before returning a stale fallback or temporary-unavailable response; a later
-completed refresh is available to the next browser request. Access tokens are
+visitors share one refresh. An expired cache returns a still-valid last-known track immediately and refreshes
+in the background. Without a last-known track, it waits up to eight seconds
+before returning a temporary-unavailable response; a late refresh is available
+to the next browser request. Access tokens are
 reused until shortly before expiry, and Spotify calls individually time out after
 five seconds. No requests are made to Spotify while the site is idle.
 A Spotify change can remain unseen for up to one cache TTL plus one browser poll
 interval (normally about 150 seconds), plus request latency and scheduling delays.
-On failure the last successful track can instead be returned as stale until TTL plus
-15 minutes after its fetch; the browser may retain the last response until its next
-poll. Hidden tabs refresh on becoming visible.
+On failure, an observed track is returned immediately as last known for up to
+24 hours after its last successful observation. The display never calls this live playback. It shows the real
+Spotify played-at timestamp, or explicitly identifies an observation timestamp
+when Spotify did not supply a played-at value. Hidden tabs revalidate on activation.
 
 On a 429, the backend honors `Retry-After` and applies exponential backoff (one
 minute initially, up to 30 minutes, or longer if Spotify requests it). Network and
@@ -97,9 +99,15 @@ server failures use the same bounded backoff. Authentication and access errors
 (including 401, 403 and invalid refresh grants) are retried at most hourly; check
 credentials, scopes, app access and quota mode if they persist. Failures are logged
 once per attempted refresh with status, operation, next attempt and failure count;
-recovery is logged once. No tokens or response bodies are logged. Cache entries are
-in memory only; expired data is marked as last known, retains its actual played-at timestamp
-when available, and is discarded after 15 more minutes. A successful empty listening history returns HTTP 200 with `{"status":"empty"}` and displays a neutral empty-history message. If the cache is unavailable, the route returns HTTP 503 and the card displays a temporary-unavailability message.
+recovery is logged once. No tokens or response bodies are logged. Fresh responses and cooldown state remain in memory. On a successful track fetch,
+track metadata is also atomically saved to the optional `SPOTIFY_LAST_KNOWN_FILE`.
+The file is validated at startup and must reside on a mounted persistent Docker
+volume to survive container recreation. Neither tokens nor secrets are saved.
+A valid snapshot is always stale after loading. Snapshots expire after 24 hours,
+are deleted when they expire while the backend is running, and are removed on
+the next startup if the backend was stopped at expiry. A successful empty history can
+still display an earlier known track as stale. Without any previously observed
+track or valid snapshot, an upstream failure still produces HTTP 503.
 
 The previous implementation refreshed every minute even without visitors, obtained
 a new access token each time, ignored `Retry-After`, and allowed each stale-cache
@@ -115,7 +123,8 @@ The included Compose file runs one backend process. Caching and backoff are loca
 that process: additional replicas or other consumers of the same Spotify client ID
 increase aggregate calls and do not share cooldowns. Route all Spotify requests to
 one backend instance, or introduce a shared coordinator before scaling replicas.
-Restarting the process also clears its cache and cooldown.
+Restarting the process clears its fresh cache and cooldown, but a snapshot
+stored on a persistent Docker volume survives.
 
 After deployment, inspect the backend logs for `Spotify rate limited` and its
 `retryAt` value. There should be no new Spotify refresh failure from that process
@@ -128,3 +137,25 @@ References: [Spotify rate limits](https://developer.spotify.com/documentation/we
 [API caching guidance](https://developer.spotify.com/documentation/web-api/concepts/api-calls),
 [Developer Terms](https://developer.spotify.com/terms), and
 [Development Mode migration guide](https://developer.spotify.com/documentation/web-api/tutorials/february-2026-migration-guide).
+
+### Isolated Docker persistence test
+
+On Windows PowerShell from the repository root, build the test image and run:
+
+```powershell
+docker build -f backend/Dockerfile -t personal-portfolio-spotify-persistence-test .
+./backend/test/docker/persistence.ps1
+```
+
+The test uses dummy credentials and a mocked Spotify service, disables container
+networking, and removes only its own temporary containers and named volume.
+
+### Deploying the persistent Spotify fallback on the VPS
+
+The real production Compose file is not tracked in this repository. Use the
+[deployment migration guide](docs/spotify-vps-migration.md) to inspect the
+existing container and capture any usable in-memory track **before** replacing
+it, preserve all existing settings, and prepare a volume. A valid snapshot is
+necessary for an immediate fallback if Spotify is unavailable on first start.
+A snapshot expires after 24 hours; no fallback can be guaranteed beyond that.
+The guide is preparation only: this change does not deploy or modify the VPS.
